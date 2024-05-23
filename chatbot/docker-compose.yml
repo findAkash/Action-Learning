@@ -1,0 +1,24 @@
+version: '3.0'
+services:
+  rasa:
+    image: rasa/rasa:3.5.1-full
+    ports:
+      - 5007:5007
+    volumes:
+      - ./:/app
+    command:
+      - run
+      - --cors
+      - "*"
+      - --enable-api
+      - -p 5007
+    deploy:
+      replicas: 3
+  app:
+    image: alphaaks101/similarity/rasa-admin-schoolworkspro-v1.0.9
+    expose:
+      - 5055
+    deploy:
+      replicas: 3
+
+
