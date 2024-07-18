@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../InstitutionsDetails/InstitutionDetailsScreen.dart';
+
+import '../../InstitutionsScreen/institutionScreen.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   final String token;
@@ -62,6 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {
       print('Error: $e');
     }
+    clearTextFields();
   }
 
   void clearTextFields() {
@@ -72,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     websiteController.clear();
   }
 
-  Future<void> fetchInstitutions() async {
+  Future<List<dynamic>> fetchInstitutions() async {
     final String url = 'http://10.0.2.2:8000/api/v1/superadmin/institution/get';
 
     try {
@@ -94,38 +97,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print('Institutions fetched successfully: $data');
 
         if (data['success'] == true) {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) {
-              return ListView.builder(
-                itemCount: data['institutions'].length,
-                itemBuilder: (context, index) {
-                  final institution = data['institutions'][index];
-                  return ListTile(
-                    title: Text(institution['name']),
-                    subtitle: Text(institution['address']),
-                    onTap: () {
-                      Navigator.pop(context); // Close the bottom sheet
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => InstitutionDetailsScreen(institution: institution),
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          );
+          return data['institutions'];
         } else {
           print('Failed to fetch institutions: Success is not true');
+          return [];
         }
       } else {
         print('Failed to fetch institutions: ${response.statusCode}');
+        return [];
       }
     } catch (e) {
       print('Error: $e');
+      return [];
     }
   }
 
@@ -136,7 +119,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text('Dashboard'),
         actions: [
           TextButton.icon(
-            onPressed: fetchInstitutions,
+            onPressed: () async {
+              final institutions = await fetchInstitutions();
+              clearTextFields(); // Clear the text fields when the button is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InstitutionsScreen(institutions: institutions, token: widget.token),
+                ),
+              );
+            },
             icon: Icon(Icons.list, color: Colors.white),
             label: Text(
               'Institutions',

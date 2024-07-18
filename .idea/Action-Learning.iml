@@ -9,6 +9,9 @@
       <excludeFolder url="file://$MODULE_DIR$/mobile/superuser/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/mobile/superuser/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/mobile/superuser/build" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/newproject/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/newproject/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/mobile/newproject/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

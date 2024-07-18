@@ -1,11 +1,14 @@
-// File: Screen/InstitutionDetails/institutionDetailsScreen.dart
+// File: Screen/InstitutionsDetails/institutionDetailsScreen.dart
 
 import 'package:flutter/material.dart';
 
+import '../../UpdateInstitution/updateInstitutionScreen.dart';
+
 class InstitutionDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> institution;
+  final String token;
 
-  const InstitutionDetailsScreen({super.key, required this.institution});
+  const InstitutionDetailsScreen({super.key, required this.institution, required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +38,29 @@ class InstitutionDetailsScreen extends StatelessWidget {
               _buildDetailRow('Email:', institution['email']),
               _buildDetailRow('Website:', institution['website']),
               _buildDetailRow('Created At:', institution['createdAt']),
+              SizedBox(height: 20.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdateInstitutionScreen(institution: institution, token: token),
+                      ),
+                    );
+                  },
+                  child: Text('Edit Institution'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.cyan,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
