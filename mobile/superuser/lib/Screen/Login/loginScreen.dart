@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginBloc(apiUrl: 'http://192.168.56.1:8000'),
+      create: (context) => LoginBloc(apiUrl: 'http://10.0.2.2:8000'),
       child: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           print("Listener reached with state: $state");
