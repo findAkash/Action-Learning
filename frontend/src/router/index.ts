@@ -1,41 +1,47 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import UserLogin from '@/views/UserLogin.vue';
+import UserManagement from '@/views/UserManagement.vue';
+import SuperAdminManagement from '@/views/SuperAdminManagement.vue';
+import StudentManagement from '@/views/StudentManagement.vue';
+import TeacherManagement from '@/views/TeacherManagement.vue';
+import AdminManagement from '@/views/AdminManagement.vue';
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    name: 'UserLogin',
+    component: UserLogin,
+  },
+  {
+    path: '/user-management',
+    name: 'UserManagement',
+    component: UserManagement,
+  },
+  {
+    path: '/superadmin-management',
+    name: 'SuperAdminManagement',
+    component: SuperAdminManagement,
+  },
+  {
+    path: '/student-management',
+    name: 'StudentManagement',
+    component: StudentManagement,
+  },
+  {
+    path: '/teacher-management',
+    name: 'TeacherManagement',
+    component: TeacherManagement,
+  },
+  {
+    path: '/admin-management',
+    name: 'AdminManagement',
+    component: AdminManagement,
+  },
+];
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [
-    //   {
-    //     path: '/',
-    //     name: 'home',
-    //     component: HomeView,
-    //     meta: {
-    //       requiresAuth: false
-    //     }
-    //   },
-      {
-        path: '/login',
-        name: 'login',
-        component: LoginView,
-        meta: {
-          requiresAuth: false
-        }
-      }
-    ]
-});
-
-router.beforeEach((to: any, from: any, next: Function) => {
-    if (to.matched.some((record: any) => record.meta.requiresAuth)) {
-        if (!localStorage.getItem('token')) {
-            next({
-                path: '/login',
-                query: { redirect: to.fullPath }
-            })
-        } else {
-            next()
-        }
-    } else {
-        next()
-    }
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
 });
 
 export default router;

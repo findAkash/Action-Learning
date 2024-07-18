@@ -1,34 +1,26 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-
-const layout = computed(() => {
-  return route.meta.layout === 'PublicLayout' ? PublicLayout : AppLayoutDefault
-})
-</script>
-
 <template>
-  <div>
-    <router-view />
-    <GlobalSnackbar />
+  <div id="app">
+    <v-app>
+      <router-view></router-view>
+    </v-app>
   </div>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
+export default defineComponent({
+  name: 'App',
+});
+</script>
 
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+<style>
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  font-family: 'Roboto', sans-serif;
 }
 </style>
