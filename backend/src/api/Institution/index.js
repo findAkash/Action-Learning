@@ -3,14 +3,16 @@ import {
   handleAsyncRequest,
   APIError,
 } from '../../helpers/handle-async-request.js';
-import { User } from '../../models/users.js';
+import { User } from '../../models/user.js';
 import { UserInstitutionAPI } from './user.js';
+import { InstitutionAdminAPI } from './admin/index.js';
 
 export class InstitutionAPI {
   static instance() {
     const router = Router();
     router.post('/login', login);
     router.use('/user', UserInstitutionAPI.instance());
+    router.use('/admin', InstitutionAdminAPI.instance());
     return router;
   }
 }
