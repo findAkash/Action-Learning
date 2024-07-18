@@ -26,14 +26,14 @@ const createStudent = handleAsyncRequest(async (req, res) => {
   session.startTransaction();
 
   try {
-    const { email, password, firstName, lastName, institutionId, batch } =
-      req.body;
+    const { email, password, firstName, lastName, batch } = req.body;
 
     // Check if the user already exists
     const isUserExist = await User.findOne({ email });
     if (isUserExist) {
       throw new APIError(400, 'User already exists');
     }
+    const institutionId = req.user.institution;
 
     // Create the user
     const user = new User({

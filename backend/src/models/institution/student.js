@@ -9,7 +9,7 @@ const StudentSchema = new Schema({
   },
   institutionId: {
     type: Schema.Types.ObjectId,
-    ref: 'Institution',
+    ref: 'Institutions',
     required: true,
   },
   enrollments: [{ type: Schema.Types.ObjectId, ref: 'Enrollment' }],
