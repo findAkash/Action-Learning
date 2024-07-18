@@ -8,7 +8,7 @@ const BatchSchema = new Schema({
   endDate: { type: Date, required: true },
   institutionId: {
     type: Schema.Types.ObjectId,
-    ref: 'Institution',
+    ref: 'Institutions',
     required: true,
   },
 });
