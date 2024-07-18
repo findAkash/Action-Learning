@@ -1,0 +1,16 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class dashboardScreen extends StatefulWidget {
+  const dashboardScreen({super.key});
+
+  @override
+  State<dashboardScreen> createState() => _dashboardScreenState();
+}
+
+class _dashboardScreenState extends State<dashboardScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
+}
