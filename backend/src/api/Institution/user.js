@@ -23,7 +23,7 @@ const createUser = handleAsyncRequest(async (req, res) => {
     email: req.body.email,
   });
   if (isExist) {
-    throw new APIError('User already exists', 400);
+    throw new APIError(400, 'User already exists');
   }
   const user = new User(req.body);
   await user.save();
@@ -37,7 +37,7 @@ const createUser = handleAsyncRequest(async (req, res) => {
 const getUsers = handleAsyncRequest(async (req) => {
   const users = await User.find();
   if (!users) {
-    throw new APIError('Users not found', 404);
+    throw new APIError(404, 'Users not found');
   }
   return { success: true, users };
 });
