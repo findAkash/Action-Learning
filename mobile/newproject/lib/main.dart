@@ -36,10 +36,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController teacherEmailController = TextEditingController();
-  final TextEditingController teacherPasswordController = TextEditingController();
+  final TextEditingController adminEmailController = TextEditingController();
+  final TextEditingController adminPasswordController = TextEditingController();
 
-  Future<void> loginTeacher(BuildContext context) async {
+  Future<void> loginAdmin(BuildContext context) async {
     final String url = 'http://10.0.2.2:8000/api/v1/institution/login';
 
     try {
@@ -49,16 +49,17 @@ class _MyHomePageState extends State<MyHomePage> {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          'email': teacherEmailController.text,
-          'password': teacherPasswordController.text,
+          'email': adminEmailController.text,
+          'password': adminPasswordController.text,
         }),
       );
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
         print('Login successful: $data');
 
         if (data['success'] == true) {
@@ -67,21 +68,37 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialPageRoute(builder: (context) => SecondRouteTeacher()),
           );
         } else {
-          print('Login failed: Success is not true');
+          final String message = data['message'] ?? 'Login failed';
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login failed: Success is not true')),
+            SnackBar(
+              content: Text(
+                message,
+                textAlign: TextAlign.center,
+              ),
+            ),
           );
         }
       } else {
-        print('Failed to login: ${response.statusCode}');
+        final String message = data['message'] ?? 'Failed to login';
+        print('Failed to login: $message');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to login: ${response.statusCode}')),
+          SnackBar(
+            content: Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
+          ),
         );
       }
     } catch (e) {
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(
+          content: Text(
+            'Error: $e',
+            textAlign: TextAlign.center,
+          ),
+        ),
       );
     }
   }
@@ -97,14 +114,14 @@ class _MyHomePageState extends State<MyHomePage> {
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Students'),
-              Tab(text: 'Teachers'),
+              Tab(text: 'Admins'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
             _buildStudentsTab(context),
-            _buildTeachersTab(context),
+            _buildAdminTab(context),
           ],
         ),
       ),
@@ -175,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildTeachersTab(BuildContext context) {
+  Widget _buildAdminTab(BuildContext context) {
     return Container(
       color: Colors.cyanAccent,
       child: Padding(
@@ -190,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Text('Username:', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
               TextField(
-                controller: teacherEmailController,
+                controller: adminEmailController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -208,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Text('Password:', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
               TextField(
-                controller: teacherPasswordController,
+                controller: adminPasswordController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -226,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    loginTeacher(context);
+                    loginAdmin(context);
                   },
                   child: Text('Sign In'),
                   style: ElevatedButton.styleFrom(
