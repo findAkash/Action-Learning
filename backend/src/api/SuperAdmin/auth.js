@@ -17,11 +17,12 @@ const login = handleAsyncRequest(async (req, res) => {
   const { email, password } = req.body;
   const user = await SuperAdmin.findOne({ email });
   if (!user) {
-    throw new APIError('Super admin not found', 404);
+    throw new APIError(400, 'Super admin not found');
   }
   const isMatch = await user.comparePassword(password);
+  console.log(isMatch);
   if (!isMatch) {
-    throw new APIError('Invalid email or password', 400);
+    throw new APIError(400, 'Invalid email or password');
   }
   const token = await user.generateToken();
   return { success: true, user };
