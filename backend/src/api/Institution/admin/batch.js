@@ -20,7 +20,8 @@ export class BatchAPI {
 }
 
 const createBatch = handleAsyncRequest(async (req, res) => {
-  const { batchName, startDate, endDate, institutionId } = req.body;
+  const { batchName, startDate, endDate } = req.body;
+  const institutionId = req.user.institution;
 
   // Check if the batch already exists for the given name and institution
   const existingBatch = await Batch.findOne({ batchName, institutionId });
