@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import { User } from './users.js';
+import { User } from './user.js';
 
 const Institutions = new Schema(
   {

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/users.js';
+import { User } from '../models/user.js';
 import { SuperAdmin } from '../models/superadmin.js';
 import { CONFIG } from '../../config/confg.js';
 import {
@@ -17,6 +17,7 @@ export const authMiddleware = (type) => async (req, res, next) => {
     const cleanToken = token.replace('Bearer ', '');
 
     const decoded = jwt.verify(cleanToken, CONFIG.SECRET);
+    console.log(decoded);
     if (!decoded) {
       throw new APIError(401, 'Invalid token');
     }
@@ -29,13 +30,39 @@ export const authMiddleware = (type) => async (req, res, next) => {
         throw new APIError(401, 'Super Admin not found');
       }
       req.superAdmin = superAdmin;
-    } else if (type === 'user') {
+    } else if (type === 'admin') {
+      const user = await User.findOne({
+        _id: decoded._id,
+      });
+      console.log(user);
+      if (!user) {
+        throw new APIError(401, 'User not found');
+      }
+      if (user.role !== 'admin') {
+        throw new APIError(401, 'Unauthorized');
+      }
+      req.user = user;
+    } else if (type === 'student') {
+      const user = await User.findOne({
+        _id: decoded._id,
+      });
+      if (!user) {
+        throw new APIError(401, 'User not found');
+      }
+      if (user.role !== 'student') {
+        throw new APIError(401, 'Unauthorized');
+      }
+      req.user = user;
+    } else if (type === 'teacher') {
       const user = await User.findOne({
         _id: decoded._id,
         'tokens.token': token,
       });
       if (!user) {
         throw new APIError(401, 'User not found');
+      }
+      if (user.role !== 'teacher') {
+        throw new APIError(401, 'Unauthorized');
       }
       req.user = user;
     } else {
