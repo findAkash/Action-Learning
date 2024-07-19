@@ -81,6 +81,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Scaffold(
       appBar: AppBar(
         title: Text('Super Admin Login'),
@@ -98,6 +99,19 @@ class LoginScreen extends StatelessWidget {
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: Colors.cyan,
+=======
+    return BlocProvider(
+      create: (context) => LoginBloc(apiUrl: 'http://10.0.2.2:8000'),
+      child: BlocConsumer<LoginBloc, LoginState>(
+        listener: (context, state) {
+          print("Listener reached with state: $state");
+          if (state is LoginSuccess) {
+            print("Login successful, navigating to dashboard");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => dashboardScreen(),
+>>>>>>> 1c61f6e (Chatbot inital API integration done)
               ),
               textAlign: TextAlign.center,
             ),
