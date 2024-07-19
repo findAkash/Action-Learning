@@ -4,6 +4,7 @@ import {
   APIError,
 } from '../../../helpers/handle-async-request.js';
 import { User } from '../../../models/user.js';
+import { Student } from '../../../models/institution/student.js';
 // import { TeacherAPI } from './teacher.js';
 // import { StudentAPI } from './student.js';
 // import { CourseAPI } from './course.js';
@@ -17,6 +18,7 @@ export class InstitutionStudentAPI {
     const router = Router();
     router.post('/login', login);
     router.use(authMiddleware('student'));
+    router.get('/:id', getStudentById);
     // router.use('/teacher', TeacherAPI.instance());
     // router.use('/student', StudentAPI.instance());
     // router.use('/course', CourseAPI.instance());
@@ -37,6 +39,25 @@ const login = handleAsyncRequest(async (req, res) => {
   if (!isMatch) {
     throw new APIError(400, 'Invalid email or password');
   }
+  const student = await Student.findOne({ userId: user._id });
   const token = await user.generateToken();
-  return { success: true, user };
+  return { success: true, user, student };
+});
+
+const getStudentById = handleAsyncRequest(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    throw new APIError(404, 'Student not found');
+  }
+  const student = await Student.findOne({ userId: user._id })
+    .populate('institutionId')
+    .populate('batch')
+    .populate('enrollments')
+    .populate('userId');
+  if (!student) {
+    throw new APIError(404, 'Student not found');
+  }
+
+  return { success: true, student };
 });
