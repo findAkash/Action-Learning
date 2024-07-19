@@ -3,9 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AddBatchInfoScreen/AddBatchInfoScreen.dart';
+import '../AdminAddStudentScreen/AdminAddStudentScreen.dart';
 import '../AddminBatchScreen/addBatchPage.dart';
-
-
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key, required this.token});
@@ -58,30 +57,68 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Add new batch",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.cyan,
+            Center(
+              child: Text(
+                "Dashboard",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.cyan,
+                ),
               ),
             ),
             SizedBox(height: 20),
             Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddBatchPage(token: widget.token)),
-                  );
-                },
-                child: Text("Go to Add Batch Page"),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.cyan,
-                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                  textStyle: TextStyle(fontSize: 18),
-                ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      buildAddButton(
+                        context,
+                        "Add Batch",
+                            () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AddBatchPage(token: widget.token)),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 20), // Spacing between buttons
+                      buildAddButton(
+                        context,
+                        "Add Student",
+                            () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AdminAddStudentScreen(token: widget.token)),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20), // Spacing between rows
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      buildAddButton(
+                        context,
+                        "Add Department",
+                            () {
+                          // Add your onPressed logic here for Add Department
+                        },
+                      ),
+                      SizedBox(width: 20), // Spacing between buttons
+                      buildAddButton(
+                        context,
+                        "Add Course",
+                            () {
+                          // Add your onPressed logic here for Add Course
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 30),
@@ -101,15 +138,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 itemCount: batches.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    elevation: 4,
                     child: ListTile(
+                      contentPadding: EdgeInsets.all(16.0),
                       title: Text(
                         batches[index]['batchName'],
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                       subtitle: Text(
                         'Start: ${batches[index]['startDate']}\nEnd: ${batches[index]['endDate']}',
+                        style: TextStyle(fontSize: 14),
                       ),
+                      trailing: Icon(Icons.arrow_forward_ios, color: Colors.cyan),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -127,6 +174,31 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildAddButton(BuildContext context, String label, VoidCallback onPressed) {
+    return SizedBox(
+      width: 160, // Square width
+      height: 130, // Square height
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: label.split(' ').map((text) => Text(text, textAlign: TextAlign.center)).toList(),
+        ),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.cyan,
+          textStyle: TextStyle(fontSize: 18),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          elevation: 8,
+          shadowColor: Colors.black.withOpacity(0.2),
         ),
       ),
     );
