@@ -49,8 +49,8 @@ const createStudent = handleAsyncRequest(async (req, res) => {
 
     // Create the student
     const student = new Student({
-      userId: user._id,
-      institutionId,
+      user: user._id,
+      institution: institutionId,
       batch,
       enrollments: [],
     });
