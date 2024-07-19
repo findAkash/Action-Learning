@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AddBatchInfoScreen/AddBatchInfoScreen.dart';
-import '../AddBatchScreen/AddBatchPage.dart';
+import '../AddminBatchScreen/addBatchPage.dart';
+
 
 
 class AdminHomeScreen extends StatefulWidget {
