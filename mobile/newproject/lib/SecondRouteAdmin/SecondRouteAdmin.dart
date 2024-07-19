@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../AdminCourseScreen/AdminCourseScreen.dart';
 import '../AdminHomeScreen/AdminHomeScreen.dart';
-import '../TeacherCourseScreen/TeacherCourseScreen.dart';
+import '../AdminTrackStudentScreen/adminTrackStudent.dart';
 
 
 class SecondRouteAdmin extends StatefulWidget {
   const SecondRouteAdmin({Key? key, required this.token}) : super(key: key);
   final String token;
+
   @override
   State<SecondRouteAdmin> createState() => _SecondRouteAdminState();
 }
@@ -15,14 +17,15 @@ class SecondRouteAdmin extends StatefulWidget {
 class _SecondRouteAdminState extends State<SecondRouteAdmin> {
   int _selectedIndex = 0;
 
-  late List<Widget> _widgetOptions;
+  late final List<Widget> _widgetOptions;
 
   @override
   void initState() {
     super.initState();
-    _widgetOptions = <Widget>[
+    _widgetOptions = [
       AdminHomeScreen(token: widget.token),
-      AdminCourseScreen(), // Assuming you want to pass the token here as well
+      AdminCourseScreen(),
+      AdminTrackStudentScreen(token: widget.token,),
     ];
   }
 
@@ -37,7 +40,7 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('EPITA', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.cyan,
       ),
       body: Center(
@@ -54,6 +57,10 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
           BottomNavigationBarItem(
             icon: Icon(Icons.engineering_outlined), // Ensure you have an appropriate icon here
             label: 'Course',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person), // Icon for students
+            label: 'Students',
           ),
         ],
         currentIndex: _selectedIndex,
