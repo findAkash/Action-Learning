@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 const DepartmentSchema = new Schema({
   name: { type: String, required: true },
-  institution_id: {
+  institution: {
     type: Schema.Types.ObjectId,
-    ref: 'Institution',
+    ref: 'Institutions',
     required: true,
   },
   courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
 });
 
-module.exports = mongoose.model('Department', DepartmentSchema);
+export const Department = mongoose.model('Department', DepartmentSchema);

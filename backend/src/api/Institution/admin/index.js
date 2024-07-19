@@ -11,6 +11,7 @@ import { BatchAPI } from './batch.js';
 import { EnrollmentAPI } from './enrollment.js';
 import { RoutineAPI } from './routine.js';
 import { authMiddleware } from '../../../middleware/authMiddleware.js';
+import DepartmentAPI from './department.js';
 
 export class InstitutionAdminAPI {
   static instance() {
@@ -23,6 +24,7 @@ export class InstitutionAdminAPI {
     router.use('/batch', BatchAPI.instance());
     router.use('/enrollment', EnrollmentAPI.instance());
     router.use('routine', RoutineAPI.instance());
+    router.use('/department', DepartmentAPI.instance());
     return router;
   }
 }
