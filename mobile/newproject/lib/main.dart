@@ -1,10 +1,10 @@
-// File: main.dart
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'SecondRouteTeacher/SecondRouteTeacher.dart';
+
+import 'SecondRouteAdmin/SecondRouteAdmin.dart';
 import 'SecondScreen/SecondPage.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'EPITA'),
+      home: const MyHomePage(title: ''),
     );
   }
 }
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if (data['success'] == true) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => SecondRouteTeacher()),
+            MaterialPageRoute(builder: (context) => SecondRouteAdmin(token: data['user']['tokens']['token'])),
           );
         } else {
           final String message = data['message'] ?? 'Login failed';

@@ -2,260 +2,130 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../SecondRouteTeacher/SecondRouteTeacher.dart';
-import '../SecondScreen/SecondPage.dart';
+import '../AddBatchInfoScreen/AddBatchInfoScreen.dart';
+import '../AddBatchScreen/AddBatchPage.dart';
 
 
-void main() {
-  runApp(const MyApp());
-}
+class AdminHomeScreen extends StatefulWidget {
+  const AdminHomeScreen({super.key, required this.token});
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String token;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'School Management System',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'EPITA'),
-    );
+  _AdminHomeScreenState createState() => _AdminHomeScreenState();
+}
+
+class _AdminHomeScreenState extends State<AdminHomeScreen> {
+  List<dynamic> batches = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBatches();
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController adminEmailController = TextEditingController();
-  final TextEditingController adminPasswordController = TextEditingController();
-
-  Future<void> loginAdmin(BuildContext context) async {
-    final String url = 'http://10.0.2.2:8000/api/v1/institution/login';
+  Future<void> fetchBatches() async {
+    final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/batch/list';
 
     try {
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.token}',
         },
-        body: jsonEncode({
-          'email': adminEmailController.text,
-          'password': adminPasswordController.text,
-        }),
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      final Map<String, dynamic> data = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
-        print('Login successful: $data');
-
-        if (data['success'] == true) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SecondRouteAdmin(token: data['user']['tokens']['token'])),
-          );
-        } else {
-          final String message = data['message'] ?? 'Login failed';
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                message,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        setState(() {
+          batches = data['batches'];
+        });
       } else {
-        final String message = data['message'] ?? 'Failed to login';
-        print('Failed to login: $message');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              message,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
+        print('Failed to fetch batches: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error: $e',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2, // Number of tabs
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.cyan,
-          title: Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Students'),
-              Tab(text: 'Admins'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildStudentsTab(context),
-            _buildAdminTab(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStudentsTab(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 20),
-            Center(child: Image(image: AssetImage("images/Epita.png"), height: 200, width: 200)),
-            Text('Username:', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text('Password:', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
+          children: [
+            Text(
+              "Add new batch",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.cyan,
               ),
             ),
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRouteStudent()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddBatchPage(token: widget.token)),
+                  );
                 },
-                child: Text('Sign In'),
+                child: Text("Go to Add Batch Page"),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.cyan,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                  textStyle: TextStyle(fontSize: 18),
                 ),
               ),
-            )
+            ),
+            SizedBox(height: 30),
+            Text(
+              "Current Batches",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.cyan,
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: batches.isEmpty
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                itemCount: batches.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      title: Text(
+                        batches[index]['batchName'],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Start: ${batches[index]['startDate']}\nEnd: ${batches[index]['endDate']}',
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AdminBatchInfoScreen(
+                              token: widget.token,
+                              batch: batches[index],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAdminTab(BuildContext context) {
-    return Container(
-      color: Colors.cyanAccent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height: 20),
-              Center(child: Image(image: AssetImage("images/Epita.png"), height: 200, width: 200)),
-              Text('Username:', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
-              SizedBox(height: 20),
-              TextField(
-                controller: adminEmailController,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Text('Password:', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
-              SizedBox(height: 20),
-              TextField(
-                controller: adminPasswordController,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    loginAdmin(context);
-                  },
-                  child: Text('Sign In'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
-                  ),
-                ),
-              )
-            ],
-          ),
         ),
       ),
     );

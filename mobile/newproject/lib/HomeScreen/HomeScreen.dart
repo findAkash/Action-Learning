@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:newproject/TeacherScreen/TeacherScreen.dart';
+
 import 'package:newproject/bloc/home_screen_bloc.dart';
 import "package:flutter_bloc/flutter_bloc.dart";
+
+import '../TeacherScreen/TeacherScreen.dart';
+
+
 
 class HomeScreen extends StatefulWidget {
   @override
