@@ -1,19 +1,17 @@
 <template>
-    <div>
-      <h2>Create Super Admin</h2>
-      <form @submit.prevent="createSuperAdmin">
-        <input v-model="email" placeholder="Email" />
-        <input v-model="password" placeholder="Password" type="password" />
-        <button type="submit">Create</button>
-      </form>
-    </div>
+    <v-form>
+      <v-text-field v-model="email" label="Email" prepend-icon="mdi-account" type="email"></v-text-field>
+      <v-text-field v-model="password" label="Password" prepend-icon="mdi-lock" type="password"></v-text-field>
+      <v-btn color="primary" @click="createSuperAdmin">Create Super Admin</v-btn>
+    </v-form>
   </template>
   
   <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { useSuperAdminStore } from '@/stores/superadmin';
+  import { useSuperAdminStore } from '@/stores/superAdmin';
   
   export default defineComponent({
+    name: 'SuperAdminForm',
     setup() {
       const superAdminStore = useSuperAdminStore();
       const email = ref('');

@@ -15,9 +15,13 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async login(credentials: { email: string; password: string }) {
-      const response = await axios.post('/api/v1/institution/login', credentials);
-      this.user = response.data.user;
-      this.token = response.data.token;
+      try {
+        const response = await axios.post('api/v1/institution/login', credentials);
+        this.user = response.data.user;
+        this.token = response.data.user.tokens.token;
+      } catch (error) {
+        throw new Error('Login failed');
+      }
     },
     logout() {
       this.user = null;

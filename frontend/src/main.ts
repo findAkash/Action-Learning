@@ -6,7 +6,7 @@ import vuetify from './plugins/vuetify';
 
 const app = createApp(App);
 
-app.use(createPinia());
 app.use(router);
+app.use(createPinia());
 app.use(vuetify);
 app.mount('#app');

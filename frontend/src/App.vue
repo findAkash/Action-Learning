@@ -1,9 +1,7 @@
 <template>
-  <div id="app">
-    <v-app>
-      <router-view></router-view>
-    </v-app>
-  </div>
+  <v-app>
+    <router-view></router-view>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -15,12 +13,10 @@ export default defineComponent({
 </script>
 
 <style>
-html,
-body,
-#app {
+html, body, #app, .v-application {
   height: 100%;
   margin: 0;
-  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  background: linear-gradient(to right, #00c6ff, #ff7e5f);
   font-family: 'Roboto', sans-serif;
 }
 </style>

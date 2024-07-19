@@ -1,8 +1,8 @@
 <template>
     <v-container>
       <v-card class="pa-5">
-        <v-card-title>
-          <span class="headline">User List</span>
+        <v-card-title class="text-h5">
+          User List
         </v-card-title>
         <v-card-text>
           <v-list>

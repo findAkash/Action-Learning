@@ -1,8 +1,8 @@
 <template>
     <v-container>
       <v-card class="pa-5">
-        <v-card-title>
-          <span class="headline">Create User</span>
+        <v-card-title class="text-h5">
+          Create User
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="createUser">

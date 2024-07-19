@@ -1,8 +1,8 @@
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
-import { aliases, mdi } from 'vuetify/iconsets/mdi';
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
 
-const vuetify = createVuetify({
+export default createVuetify({
   icons: {
     defaultSet: 'mdi',
     aliases,
@@ -26,5 +26,3 @@ const vuetify = createVuetify({
     },
   },
 });
-
-export default vuetify;

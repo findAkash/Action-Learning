@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import UserLogin from '@/views/UserLogin.vue';
-import UserManagement from '@/views/UserManagement.vue';
-import SuperAdminManagement from '@/views/SuperAdminManagement.vue';
-import StudentManagement from '@/views/StudentManagement.vue';
-import TeacherManagement from '@/views/TeacherManagement.vue';
-import AdminManagement from '@/views/AdminManagement.vue';
+import SuperAdminLogin from '@/views/SuperAdminLogin.vue';
+import AdminDashboard from '@/views/AdminDashboard.vue';
+import SuperAdminDashboard from '@/views/SuperAdminDashboard.vue';
+import TeacherDashboard from '@/views/TeacherDashboard.vue';
+import StudentDashboard from '@/views/StudentDashboard.vue';
+import UserList from '@/views/UserList.vue';
+import InstitutionList from '@/views/InstitutionList.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -13,29 +15,41 @@ const routes: Array<RouteRecordRaw> = [
     component: UserLogin,
   },
   {
-    path: '/user-management',
-    name: 'UserManagement',
-    component: UserManagement,
+    path: '/superadmin-login',
+    name: 'SuperAdminLogin',
+    component: SuperAdminLogin,
   },
   {
-    path: '/superadmin-management',
-    name: 'SuperAdminManagement',
-    component: SuperAdminManagement,
+    path: '/admin-dashboard',
+    name: 'AdminDashboard',
+    component: AdminDashboard,
   },
   {
-    path: '/student-management',
-    name: 'StudentManagement',
-    component: StudentManagement,
+    path: '/superadmin-dashboard',
+    name: 'SuperAdminDashboard',
+    component: SuperAdminDashboard,
+    children: [
+      {
+        path: 'users',
+        name: 'UserList',
+        component: UserList,
+      },
+      {
+        path: 'institutions',
+        name: 'InstitutionList',
+        component: InstitutionList,
+      },
+    ],
   },
   {
-    path: '/teacher-management',
-    name: 'TeacherManagement',
-    component: TeacherManagement,
+    path: '/teacher-dashboard',
+    name: 'TeacherDashboard',
+    component: TeacherDashboard,
   },
   {
-    path: '/admin-management',
-    name: 'AdminManagement',
-    component: AdminManagement,
+    path: '/student-dashboard',
+    name: 'StudentDashboard',
+    component: StudentDashboard,
   },
 ];
 
