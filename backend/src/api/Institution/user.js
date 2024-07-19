@@ -3,7 +3,7 @@ import {
   handleAsyncRequest,
   APIError,
 } from '../../helpers/handle-async-request.js';
-import { User } from '../../models/users.js';
+import { User } from '../../models/user.js';
 
 export class UserInstitutionAPI {
   static instance() {

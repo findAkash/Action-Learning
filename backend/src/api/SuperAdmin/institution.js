@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Institution } from '../../models/institutions.js';
+import { Institution } from '../../models/institution.js';
 import {
   handleAsyncRequest,
   APIError,
@@ -60,15 +60,15 @@ const getInstitutions = handleAsyncRequest(async (req) => {
 });
 
 const updateInstitution = handleAsyncRequest(async (req) => {
-  const Institution = await Institution.findByIdAndUpdate(
+  const institution = await Institution.findByIdAndUpdate(
     req.params.id,
     req.body,
     { new: true }
   );
-  if (!Institution) {
+  if (!institution) {
     throw new APIError(404, 'Institution not found');
   }
-  res.send({ success: true, Institution });
+  return { success: true, institution };
 });
 
 const deleteInstitution = handleAsyncRequest(async (req) => {
@@ -76,5 +76,5 @@ const deleteInstitution = handleAsyncRequest(async (req) => {
   if (!Institution) {
     throw new APIError(404, 'Institution not found');
   }
-  res.send({ success: true, Institution });
+  return { success: true, message: 'Institution deleted successfully' };
 });
