@@ -50,11 +50,11 @@ const getStudentById = handleAsyncRequest(async (req, res) => {
   if (!user) {
     throw new APIError(404, 'Student not found');
   }
-  const student = await Student.findOne({ userId: user._id })
-    .populate('institutionId')
+  const student = await Student.findOne({ user: user._id })
+    .populate('institution')
     .populate('batch')
     .populate('enrollments')
-    .populate('userId');
+    .populate('user');
   if (!student) {
     throw new APIError(404, 'Student not found');
   }
