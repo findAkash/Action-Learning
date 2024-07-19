@@ -55,52 +55,19 @@ class _MyHomePageState extends State<MyHomePage> {
         }),
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
-        print('Login successful: $data');
-
-        if (data['success'] == true) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SecondRouteAdmin(token: data['user']['tokens']['token'])),
-          );
-        } else {
-          final String message = data['message'] ?? 'Login failed';
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                message,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }
-      } else {
-        final String message = data['message'] ?? 'Failed to login';
-        print('Failed to login: $message');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              message,
-              textAlign: TextAlign.center,
-            ),
-          ),
+      if (response.statusCode == 200 && data['success'] == true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SecondRouteAdmin(token: data['user']['tokens']['token'])),
         );
+      } else {
+        final String message = data['message'] ?? 'Login failed';
+        showSnackBar(context, message);
       }
     } catch (e) {
-      print('Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error: $e',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
+      showSnackBar(context, 'Error: $e');
     }
   }
 
@@ -119,53 +86,31 @@ class _MyHomePageState extends State<MyHomePage> {
         }),
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
-        print('Login successful: $data');
-
-        if (data['success'] == true) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SecondRouteStudent(token: data['user']['tokens']['token'])),
-          );
-        } else {
-          final String message = data['message'] ?? 'Login failed';
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                message,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }
-      } else {
-        final String message = data['message'] ?? 'Failed to login';
-        print('Failed to login: $message');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              message,
-              textAlign: TextAlign.center,
-            ),
-          ),
+      if (response.statusCode == 200 && data['success'] == true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SecondRouteStudent(token: data['user']['tokens']['token'])),
         );
+      } else {
+        final String message = data['message'] ?? 'Login failed';
+        showSnackBar(context, message);
       }
     } catch (e) {
-      print('Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error: $e',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
+      showSnackBar(context, 'Error: $e');
     }
+  }
+
+  void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 
   @override
@@ -175,7 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.cyan,
-          title: Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          title: Text(
+            widget.title,
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Students'),
@@ -202,43 +150,11 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 20),
-            Center(child: Image(image: AssetImage("images/Epita.png"), height: 200, width: 200)),
-            Text('Username:', style: TextStyle(fontSize: 20)),
+            Center(child: Image.asset("images/Epita.png", height: 200, width: 200)),
             SizedBox(height: 20),
-            TextField(
-              controller: studentEmailController,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
-              ),
-            ),
+            buildTextField('Username:', studentEmailController),
             SizedBox(height: 20),
-            Text('Password:', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 20),
-            TextField(
-              controller: studentPasswordController,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
-              ),
-              obscureText: true,
-            ),
+            buildTextField('Password:', studentPasswordController, isPassword: true),
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
@@ -253,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -262,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildAdminTab(BuildContext context) {
     return Container(
-      color: Colors.cyanAccent,
+      color: Colors.cyanAccent.withOpacity(0.1),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(
@@ -271,43 +187,11 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 20),
-              Center(child: Image(image: AssetImage("images/Epita.png"), height: 200, width: 200)),
-              Text('Username:', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
+              Center(child: Image.asset("images/Epita.png", height: 200, width: 200)),
               SizedBox(height: 20),
-              TextField(
-                controller: adminEmailController,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                ),
-              ),
+              buildTextField('Username:', adminEmailController, isAdmin: false),
               SizedBox(height: 20),
-              Text('Password:', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
-              SizedBox(height: 20),
-              TextField(
-                controller: adminPasswordController,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                ),
-                obscureText: true,
-              ),
+              buildTextField('Password:', adminPasswordController, isPassword: true, isAdmin: false),
               SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
@@ -322,11 +206,40 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildTextField(String labelText, TextEditingController controller, {bool isPassword = false, bool isAdmin = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          labelText,
+          style: TextStyle(fontSize: 20, color: isAdmin ? Colors.black : Colors.black, fontWeight: isAdmin ? FontWeight.bold : FontWeight.normal),
+        ),
+        SizedBox(height: 10),
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(color: Colors.grey, width: 1.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(color: Colors.blue, width: 2.0),
+            ),
+          ),
+          obscureText: isPassword,
+        ),
+      ],
     );
   }
 }
