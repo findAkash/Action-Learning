@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'SecondRouteAdmin/SecondRouteAdmin.dart';
 import 'SecondScreen/SecondPage.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -38,9 +37,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController adminEmailController = TextEditingController();
   final TextEditingController adminPasswordController = TextEditingController();
+  final TextEditingController studentEmailController = TextEditingController();
+  final TextEditingController studentPasswordController = TextEditingController();
 
   Future<void> loginAdmin(BuildContext context) async {
-    final String url = 'http://10.0.2.2:8000/api/v1/institution/login';
+    final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/login';
 
     try {
       final response = await http.post(
@@ -66,6 +67,70 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SecondRouteAdmin(token: data['user']['tokens']['token'])),
+          );
+        } else {
+          final String message = data['message'] ?? 'Login failed';
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                message,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
+      } else {
+        final String message = data['message'] ?? 'Failed to login';
+        print('Failed to login: $message');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error: $e',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> loginStudent(BuildContext context) async {
+    final String url = 'http://10.0.2.2:8000/api/v1/institution/student/login';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': studentEmailController.text,
+          'password': studentPasswordController.text,
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        print('Login successful: $data');
+
+        if (data['success'] == true) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SecondRouteStudent(token: data['user']['tokens']['token'])),
           );
         } else {
           final String message = data['message'] ?? 'Login failed';
@@ -141,6 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Text('Username:', style: TextStyle(fontSize: 20)),
             SizedBox(height: 20),
             TextField(
+              controller: studentEmailController,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -158,6 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Text('Password:', style: TextStyle(fontSize: 20)),
             SizedBox(height: 20),
             TextField(
+              controller: studentPasswordController,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -170,12 +237,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderSide: BorderSide(color: Colors.blue, width: 2.0),
                 ),
               ),
+              obscureText: true,
             ),
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRouteStudent()));
+                  loginStudent(context);
                 },
                 child: Text('Sign In'),
                 style: ElevatedButton.styleFrom(
@@ -238,6 +306,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     borderSide: BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),
+                obscureText: true,
               ),
               SizedBox(height: 20),
               Center(

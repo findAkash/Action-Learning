@@ -7,7 +7,8 @@ import '../CourseScreen/CourseScreen.dart';
 import '../HomeScreen/HomeScreen.dart';
 
 class SecondRouteStudent extends StatefulWidget {
-  const SecondRouteStudent({Key? key}) : super(key: key);
+  const SecondRouteStudent({Key? key, required this.token}) : super(key: key);
+  final String token;
 
   @override
   State<SecondRouteStudent> createState() => _SecondRouteStudentState();
