@@ -69,8 +69,11 @@ const createStudent = handleAsyncRequest(async (req, res) => {
 });
 
 const getStudents = handleAsyncRequest(async (req, res) => {
-  const institution = req.user.institution;
-  const students = await Student.find({ institution: institution }).populate(
+  const filter = {};
+  const institutionId = req.user.institution;
+  filter.institution = institutionId;
+  if (req.query.batch) filter.batch = req.query.batch;
+  const students = await Student.find(filter).populate(
     'user institution batch enrollments'
   );
   if (!students) {

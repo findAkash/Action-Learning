@@ -18,7 +18,7 @@ export class InstitutionStudentAPI {
     const router = Router();
     router.post('/login', login);
     router.use(authMiddleware('student'));
-    router.get('/:id', getStudentById);
+    router.get('/', getMyData);
     // router.use('/teacher', TeacherAPI.instance());
     // router.use('/student', StudentAPI.instance());
     // router.use('/course', CourseAPI.instance());
@@ -44,17 +44,13 @@ const login = handleAsyncRequest(async (req, res) => {
   return { success: true, user, student };
 });
 
-const getStudentById = handleAsyncRequest(async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findById(id);
-  if (!user) {
-    throw new APIError(404, 'Student not found');
-  }
-  const student = await Student.findOne({ user: user._id })
+const getMyData = handleAsyncRequest(async (req, res) => {
+  const student = await Student.findOne({ user: req.user })
     .populate('institution')
     .populate('batch')
     .populate('enrollments')
     .populate('user');
+
   if (!student) {
     throw new APIError(404, 'Student not found');
   }

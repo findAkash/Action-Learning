@@ -35,4 +35,4 @@ AttendanceSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = mongoose.model('Attendance', AttendanceSchema);
+export const Attendance = mongoose.model('Attendance', AttendanceSchema);
