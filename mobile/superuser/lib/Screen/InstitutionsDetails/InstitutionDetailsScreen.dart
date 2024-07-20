@@ -1,5 +1,3 @@
-// File: Screen/InstitutionsDetails/institutionDetailsScreen.dart
-
 import 'package:flutter/material.dart';
 
 import '../../UpdateInstitution/updateInstitutionScreen.dart';
@@ -8,7 +6,8 @@ class InstitutionDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> institution;
   final String token;
 
-  const InstitutionDetailsScreen({super.key, required this.institution, required this.token});
+  const InstitutionDetailsScreen(
+      {super.key, required this.institution, required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,8 @@ class InstitutionDetailsScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => UpdateInstitutionScreen(institution: institution, token: token),
+                        builder: (context) => UpdateInstitutionScreen(
+                            institution: institution, token: token),
                       ),
                     );
                   },
@@ -56,7 +56,8 @@ class InstitutionDetailsScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
                     textStyle: TextStyle(fontSize: 18),
                   ),
                 ),
