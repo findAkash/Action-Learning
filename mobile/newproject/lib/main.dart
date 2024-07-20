@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'SecondRouteAdmin/SecondRouteAdmin.dart';
 import 'SecondScreen/SecondPage.dart';
+import 'AdminSettingsScreen/AdminSettingsScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: ''),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const MyHomePage(title: ''),
+        '/secondRouteAdmin': (context) => SecondRouteAdmin(token: ''),
+      },
     );
   }
 }
@@ -121,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Colors.cyan,
           title: Text(
-            widget.title,
+            "",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           bottom: const TabBar(

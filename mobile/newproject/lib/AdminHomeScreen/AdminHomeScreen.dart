@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../AddBatchInfoScreen/AddBatchInfoScreen.dart';
 import '../AdminAddStudentScreen/AdminAddStudentScreen.dart';
 import '../AddminBatchScreen/addBatchPage.dart';
+import '../AdminBatchInfoScreen/adminBatchInfoScreen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key, required this.token});
@@ -16,54 +17,20 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
-  List<dynamic> batches = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchBatches();
-  }
-
-  Future<void> fetchBatches() async {
-    final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/batch/list';
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${widget.token}',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        setState(() {
-          batches = data['batches'];
-        });
-      } else {
-        print('Failed to fetch batches: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             Center(
               child: Text(
-                "Dashboard",
+                "Admin Dashboard",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.cyan,
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -74,103 +41,67 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      buildAddButton(
-                        context,
-                        "Add Batch",
-                            () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AddBatchPage(token: widget.token)),
-                          );
-                        },
+                      Expanded(
+                        child: buildNonInteractiveCard(
+                          context,
+                          "Batch",
+                          "13",
+                        ),
                       ),
-                      SizedBox(width: 20), // Spacing between buttons
-                      buildAddButton(
-                        context,
-                        "Add Student",
-                            () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AdminAddStudentScreen(token: widget.token)),
-                          );
-                        },
+                      SizedBox(width: 10), // Spacing between cards
+                      Expanded(
+                        child: buildNonInteractiveCard(
+                          context,
+                          "Student",
+                          "493",
+                        ),
+                      ),
+                      SizedBox(width: 10), // Spacing between cards
+                      Expanded(
+                        child: buildNonInteractiveCard(
+                          context,
+                          "Department",
+                          "6",
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20), // Spacing between rows
+                  SizedBox(height: 5), // Reduced spacing between rows
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      buildAddButton(
-                        context,
-                        "Add Department",
-                            () {
-                          // Add your onPressed logic here for Add Department
-                        },
+                      Expanded(
+                        child: buildNonInteractiveCard(
+                          context,
+                          "Course",
+                          "29",
+                        ),
                       ),
-                      SizedBox(width: 20), // Spacing between buttons
-                      buildAddButton(
-                        context,
-                        "Add Course",
-                            () {
-                          // Add your onPressed logic here for Add Course
-                        },
+                      SizedBox(width: 10), // Spacing between cards
+                      Expanded(
+                        child: buildNonInteractiveCard(
+                          context,
+                          "Add",
+                          "",
+                        ),
+                      ),
+                      SizedBox(width: 10), // Spacing between cards
+                      Expanded(
+                        child: buildNonInteractiveCard(
+                          context,
+                          "Add",
+                          "",
+                        ),
                       ),
                     ],
                   ),
+                  SizedBox(height: 10), // Reduced spacing between rows
+                  buildCardRow(context, "Student", Icons.school, "Teacher", Icons.person),
+                  SizedBox(height: 10), // Reduced spacing between rows
+                  buildCardRow(context, "Department", Icons.apartment, "Batch", Icons.layers),
+                  SizedBox(height: 10), // Reduced spacing between rows
+                  buildCardRow(context, "A", Icons.label, "B", Icons.label),
                 ],
-              ),
-            ),
-            SizedBox(height: 30),
-            Text(
-              "Current Batches",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.cyan,
-              ),
-            ),
-            SizedBox(height: 10),
-            Expanded(
-              child: batches.isEmpty
-                  ? Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                itemCount: batches.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    elevation: 4,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(16.0),
-                      title: Text(
-                        batches[index]['batchName'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      subtitle: Text(
-                        'Start: ${batches[index]['startDate']}\nEnd: ${batches[index]['endDate']}',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      trailing: Icon(Icons.arrow_forward_ios, color: Colors.cyan),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AdminBatchInfoScreen(
-                              token: widget.token,
-                              batch: batches[index],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
               ),
             ),
           ],
@@ -179,26 +110,116 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
-  Widget buildAddButton(BuildContext context, String label, VoidCallback onPressed) {
-    return SizedBox(
-      width: 160, // Square width
-      height: 130, // Square height
-      child: ElevatedButton(
-        onPressed: onPressed,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: label.split(' ').map((text) => Text(text, textAlign: TextAlign.center)).toList(),
-        ),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.cyan,
-          textStyle: TextStyle(fontSize: 18),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+  Widget buildNonInteractiveCard(BuildContext context, String label, String number) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 0.0), // Adjusted margin
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 4,
+      child: Container(
+        height: 80, // Smaller height for the cards
+        padding: EdgeInsets.all(8.0), // Added padding
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.cyan,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              Text(
+                number,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ],
           ),
-          elevation: 8,
-          shadowColor: Colors.black.withOpacity(0.2),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCardRow(BuildContext context, String label1, IconData icon1, String label2, IconData icon2) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: buildCardButton(
+            context,
+            label1,
+            icon1,
+                () {
+              // Add your onPressed logic here
+            },
+          ),
+        ),
+        SizedBox(width: 10), // Spacing between buttons
+        Expanded(
+          child: buildCardButton(
+            context,
+            label2,
+            icon2,
+            label2 == "Batch"
+                ? () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AdminBatchInfoPage(token: widget.token)),
+              );
+            }
+                : () {
+              // Add your onPressed logic here
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildCardButton(BuildContext context, String label, IconData icon, VoidCallback onPressed) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 0.0), // Adjusted margin
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 4,
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          height: 80, // Smaller height for the cards
+          padding: EdgeInsets.all(8.0), // Added padding
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 30, color: Colors.cyan),
+                SizedBox(width: 10),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

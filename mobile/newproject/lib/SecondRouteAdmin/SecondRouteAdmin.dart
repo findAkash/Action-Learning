@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../AdminCourseScreen/AdminCourseScreen.dart';
 import '../AdminHomeScreen/AdminHomeScreen.dart';
+import '../AdminSettingsScreen/adminSettingsScreen.dart';
 import '../AdminTrackStudentScreen/adminTrackStudent.dart';
-
 
 class SecondRouteAdmin extends StatefulWidget {
   const SecondRouteAdmin({Key? key, required this.token}) : super(key: key);
@@ -25,7 +25,8 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
     _widgetOptions = [
       AdminHomeScreen(token: widget.token),
       AdminCourseScreen(),
-      AdminTrackStudentScreen(token: widget.token,),
+      AdminTrackStudentScreen(token: widget.token),
+      AdminSettingsScreen(),
     ];
   }
 
@@ -38,11 +39,6 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.cyan,
-      ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -61,6 +57,10 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person), // Icon for students
             label: 'Students',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings), // Icon for settings
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
