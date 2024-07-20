@@ -1,221 +1,25 @@
-// import 'package:flutter/material.dart';
-// import 'package:newproject/SecondRouteTeacher/SecondRouteTeacher.dart';
-// import 'SecondScreen/SecondPage.dart'; // Ensure you have this path and screen correctly set up
-//
-// void main() {
-//   runApp(const MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'School Management System',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
-//         useMaterial3: true,
-//       ),
-//       home: const MyHomePage(title: 'EPITA'),
-//     );
-//     //bud
-//   }
-// }
-//
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-//
-//   final String title;
-//
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 2, // Number of tabs
-//       child: Scaffold(
-//         appBar: AppBar(
-//           backgroundColor: Colors.cyan,
-//           title: Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-//           bottom: const TabBar(
-//             tabs: [
-//               Tab(text: 'Students'),
-//               Tab(text: 'Teachers'),
-//             ],
-//           ),
-//         ),
-//         body: TabBarView(
-//           children: [
-//             _buildStudentsTab(context),
-//             _buildTeachersTab(context),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildStudentsTab(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           SizedBox(height: 20),
-//           Center(child: Image(image: AssetImage("images/Epita.png"), height: 200, width: 200)),
-//           Text('Username:', style: TextStyle(fontSize: 20)),
-//           SizedBox(height: 20),
-//           TextField(
-//             decoration: InputDecoration(
-//               contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-//               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-//               enabledBorder: OutlineInputBorder(
-//                 borderRadius: BorderRadius.circular(20.0),
-//                 borderSide: BorderSide(color: Colors.grey, width: 1.0),
-//               ),
-//               focusedBorder: OutlineInputBorder(
-//                 borderRadius: BorderRadius.circular(20.0),
-//                 borderSide: BorderSide(color: Colors.blue, width: 2.0),
-//               ),
-//             ),
-//           ),
-//           SizedBox(height: 20),
-//           Text('Password:', style: TextStyle(fontSize: 20)),
-//           SizedBox(height: 20),
-//           TextField(
-//             decoration: InputDecoration(
-//               contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-//               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-//               enabledBorder: OutlineInputBorder(
-//                 borderRadius: BorderRadius.circular(20.0),
-//                 borderSide: BorderSide(color: Colors.grey, width: 1.0),
-//               ),
-//               focusedBorder: OutlineInputBorder(
-//                 borderRadius: BorderRadius.circular(20.0),
-//                 borderSide: BorderSide(color: Colors.blue, width: 2.0),
-//               ),
-//             ),
-//           ),
-//           SizedBox(height: 20),
-//           Center(
-//             child: ElevatedButton(
-//               onPressed: () {
-//                 Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRouteStudent()));
-//               },
-//               child: Text('Sign In'),
-//               style: ElevatedButton.styleFrom(
-//                 foregroundColor: Colors.white,
-//                 backgroundColor: Colors.cyan,
-//                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-//                 padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildTeachersTab(BuildContext context) {
-//     return Container(
-//       color: Colors.cyanAccent,
-//       child: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: <Widget>[
-//             SizedBox(height: 20),
-//             Center(child: Image(image: AssetImage("images/Epita.png"), height: 200, width: 200)),
-//             Text('Username:', style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold)),
-//             SizedBox(height: 20),
-//             TextField(
-//               decoration: InputDecoration(
-//                 contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-//                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-//                 enabledBorder: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(20.0),
-//                   borderSide: BorderSide(color: Colors.grey, width: 1.0),
-//                 ),
-//                 focusedBorder: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(20.0),
-//                   borderSide: BorderSide(color: Colors.blue, width: 2.0),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 20),
-//             Text('Password:', style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold)),
-//             SizedBox(height: 20),
-//             TextField(
-//               decoration: InputDecoration(
-//                 contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-//                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-//                 enabledBorder: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(20.0),
-//                   borderSide: BorderSide(color: Colors.grey, width: 1.0),
-//                 ),
-//                 focusedBorder: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(20.0),
-//                   borderSide: BorderSide(color: Colors.blue, width: 2.0),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 20),
-//             Center(
-//               child: ElevatedButton(
-//                 onPressed: () {
-//                   Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRouteTeacher()));
-//                 },
-//                 child: Text('Sign In'),
-//                 style: ElevatedButton.styleFrom(
-//                   foregroundColor: Colors.black,
-//                   backgroundColor: Colors.white,
-//                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-//                   padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
-//                 ),
-//               ),
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'SecondRouteAdmin/SecondRouteAdmin.dart';
 import 'SecondScreen/SecondPage.dart';
-=======
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'Chatbot/student_chatbotScreen.dart';
-import 'bloc/chatbot_student_bloc.dart';
->>>>>>> 1c61f6e (Chatbot inital API integration done)
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Chatbot Demo',
+      title: 'School Management System',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
+        useMaterial3: true,
       ),
-<<<<<<< HEAD
       home: const MyHomePage(title: ''),
     );
   }
@@ -234,7 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController adminEmailController = TextEditingController();
   final TextEditingController adminPasswordController = TextEditingController();
   final TextEditingController studentEmailController = TextEditingController();
-  final TextEditingController studentPasswordController = TextEditingController();
+  final TextEditingController studentPasswordController =
+      TextEditingController();
 
   Future<void> loginAdmin(BuildContext context) async {
     final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/login';
@@ -256,7 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200 && data['success'] == true) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SecondRouteAdmin(token: data['user']['tokens']['token'])),
+          MaterialPageRoute(
+              builder: (context) =>
+                  SecondRouteAdmin(token: data['user']['tokens']['token'])),
         );
       } else {
         final String message = data['message'] ?? 'Login failed';
@@ -266,6 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
       showSnackBar(context, 'Error: $e');
     }
   }
+
+  // -------------------------------------Student-------------------------------------------//
 
   Future<void> loginStudent(BuildContext context) async {
     final String url = 'http://10.0.2.2:8000/api/v1/institution/student/login';
@@ -284,11 +93,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
       final Map<String, dynamic> data = jsonDecode(response.body);
 
+      print('Response status: ${response.statusCode}');
+      print('Response body: $data');
+
       if (response.statusCode == 200 && data['success'] == true) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SecondRouteStudent(token: data['user']['tokens']['token'])),
-        );
+        final String? token = data['user']?['tokens']?['token'];
+        final String? userId = data['student']?['_id'];
+
+        print('Token: $token');
+        print('User ID: $userId');
+
+        if (token != null && userId != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SecondRouteStudent(
+                token: token,
+                userId: userId,
+              ),
+            ),
+          );
+        } else {
+          showSnackBar(context, 'Login failed: Invalid token or user ID');
+        }
       } else {
         final String message = data['message'] ?? 'Login failed';
         showSnackBar(context, message);
@@ -346,11 +173,14 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 20),
-            Center(child: Image.asset("images/Epita.png", height: 200, width: 200)),
+            Center(
+                child:
+                    Image.asset("images/Epita.png", height: 200, width: 200)),
             SizedBox(height: 20),
             buildTextField('Username:', studentEmailController),
             SizedBox(height: 20),
-            buildTextField('Password:', studentPasswordController, isPassword: true),
+            buildTextField('Password:', studentPasswordController,
+                isPassword: true),
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
@@ -361,18 +191,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.cyan,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
                   padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
                 ),
               ),
             ),
           ],
         ),
-=======
-      home: BlocProvider(
-        create: (context) => ChatBloc(),
-        child: const ChatScreen(),
->>>>>>> 1c61f6e (Chatbot inital API integration done)
       ),
     );
   }
@@ -388,11 +214,14 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 20),
-              Center(child: Image.asset("images/Epita.png", height: 200, width: 200)),
+              Center(
+                  child:
+                      Image.asset("images/Epita.png", height: 200, width: 200)),
               SizedBox(height: 20),
               buildTextField('Username:', adminEmailController, isAdmin: false),
               SizedBox(height: 20),
-              buildTextField('Password:', adminPasswordController, isPassword: true, isAdmin: false),
+              buildTextField('Password:', adminPasswordController,
+                  isPassword: true, isAdmin: false),
               SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
@@ -403,7 +232,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.black,
                     backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(horizontal: 72, vertical: 12),
                   ),
                 ),
@@ -415,20 +245,26 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget buildTextField(String labelText, TextEditingController controller, {bool isPassword = false, bool isAdmin = false}) {
+  Widget buildTextField(String labelText, TextEditingController controller,
+      {bool isPassword = false, bool isAdmin = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           labelText,
-          style: TextStyle(fontSize: 20, color: isAdmin ? Colors.black : Colors.black, fontWeight: isAdmin ? FontWeight.bold : FontWeight.normal),
+          style: TextStyle(
+              fontSize: 20,
+              color: isAdmin ? Colors.black : Colors.black,
+              fontWeight: isAdmin ? FontWeight.bold : FontWeight.normal),
         ),
         SizedBox(height: 10),
         TextField(
           controller: controller,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: Colors.grey, width: 1.0),

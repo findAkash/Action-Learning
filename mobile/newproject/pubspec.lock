@@ -335,14 +335,7 @@ packages:
       sha256: "6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-<<<<<<< HEAD
     version: "3.0.1"
-=======
-    version: "2.0.1"
-=======
-    version: "3.0.1"
->>>>>>> cb927ee (Changes in chatbot implementation)
   linkify:
     dependency: transitive
     description:
@@ -351,7 +344,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
->>>>>>> 1c61f6e (Chatbot inital API integration done)
   lints:
     dependency: transitive
     description:
