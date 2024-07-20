@@ -40,7 +40,8 @@ const createDepartment = handleAsyncRequest(async (req, res) => {
 });
 
 const getDepartments = handleAsyncRequest(async (req, res) => {
-  const departments = await Department.find()
+  const institution = req.user.institution;
+  const departments = await Department.find({ institution: institution })
     .populate('institution')
     .populate('courses');
   if (!departments) {

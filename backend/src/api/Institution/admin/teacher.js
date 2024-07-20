@@ -26,8 +26,7 @@ const createTeacher = handleAsyncRequest(async (req, res) => {
   session.startTransaction();
 
   try {
-    const { email, password, firstName, lastName, institutionId, courses } =
-      req.body;
+    const { email, password, firstName, lastName, modules } = req.body;
 
     // Check if the user already exists
     const isUserExist = await User.findOne({ email });
@@ -35,6 +34,7 @@ const createTeacher = handleAsyncRequest(async (req, res) => {
       throw new APIError(400, 'User already exists');
     }
 
+    const institutionId = req.user.institution;
     // Create the user
     const user = new User({
       email,
@@ -49,9 +49,9 @@ const createTeacher = handleAsyncRequest(async (req, res) => {
 
     // Create the teacher
     const teacher = new Teacher({
-      userId: user._id,
-      institutionId,
-      courses,
+      user: user._id,
+      institution: institutionId,
+      modules,
     });
 
     await teacher.save({ session });
@@ -68,8 +68,9 @@ const createTeacher = handleAsyncRequest(async (req, res) => {
 });
 
 const getTeachers = handleAsyncRequest(async (req, res) => {
-  const teachers = await Teacher.find().populate(
-    'userId institutionId courses'
+  const institution = req.user.institution;
+  const teachers = await Teacher.find({ institution: institution }).populate(
+    'user institution'
   );
   if (!teachers) {
     throw new APIError(404, 'Teachers not found');
@@ -79,7 +80,7 @@ const getTeachers = handleAsyncRequest(async (req, res) => {
 
 const getTeacherById = handleAsyncRequest(async (req, res) => {
   const teacher = await Teacher.findById(req.params.id).populate(
-    'userId institutionId courses'
+    'user institution'
   );
   if (!teacher) {
     throw new APIError(404, 'Teacher not found');
@@ -91,7 +92,7 @@ const updateTeacher = handleAsyncRequest(async (req, res) => {
   const teacher = await Teacher.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
-  }).populate('userId institutionId courses');
+  }).populate('user institution');
   if (!teacher) {
     throw new APIError(404, 'Teacher not found');
   }

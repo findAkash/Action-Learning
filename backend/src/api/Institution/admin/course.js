@@ -20,20 +20,27 @@ export class CourseAPI {
 }
 
 const createCourse = handleAsyncRequest(async (req, res) => {
-  const { name, departmentId, level, semester, teacher } = req.body;
+  const { name, department, code, credit, duration, level, semester, teacher } =
+    req.body;
 
   // Check if the course already exists
-  const isExist = await Course.findOne({ name, departmentId, semester });
+  const isExist = await Course.findOne({ name, department, semester });
   if (isExist) {
     throw new APIError(400, 'Course already exists');
   }
 
+  const institution = req.user.institution;
+
   const course = new Course({
     name,
-    departmentId,
+    department,
+    code,
+    credit,
+    duration,
     level,
     semester,
     teacher,
+    institution,
   });
 
   await course.save();
@@ -41,7 +48,10 @@ const createCourse = handleAsyncRequest(async (req, res) => {
 });
 
 const getCourses = handleAsyncRequest(async (req, res) => {
-  const courses = await Course.find().populate('departmentId teacher');
+  const institution = req.user.institution;
+  const courses = await Course.find({ institution: institution }).populate(
+    'department teacher institution'
+  );
   if (!courses) {
     throw new APIError(404, 'Courses not found');
   }
@@ -50,7 +60,7 @@ const getCourses = handleAsyncRequest(async (req, res) => {
 
 const getCourseById = handleAsyncRequest(async (req, res) => {
   const course = await Course.findById(req.params.id).populate(
-    'departmentId teacher'
+    'department teacher institution'
   );
   if (!course) {
     throw new APIError(404, 'Course not found');
@@ -59,10 +69,16 @@ const getCourseById = handleAsyncRequest(async (req, res) => {
 });
 
 const updateCourse = handleAsyncRequest(async (req, res) => {
-  const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  }).populate('departmentId teacher');
+  const updatedCourseData = req.body;
+
+  const course = await Course.findByIdAndUpdate(
+    req.params.id,
+    updatedCourseData,
+    {
+      new: true,
+      runValidators: true,
+    }
+  ).populate('department teacher institution');
   if (!course) {
     throw new APIError(404, 'Course not found');
   }
