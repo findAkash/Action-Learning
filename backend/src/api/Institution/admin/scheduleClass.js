@@ -5,6 +5,9 @@ import {
 } from '../../../helpers/handle-async-request.js';
 import { ClassSchedule } from '../../../models/institution/scheduleClass.js';
 import moment from 'moment';
+import { Attendance } from '../../../models/institution/attendence.js';
+import { Student } from '../../../models/institution/student.js';
+import mongoose from 'mongoose';
 
 export class ClassScheduleAPI {
   static instance() {
@@ -34,12 +37,38 @@ const createClassSchedules = handleAsyncRequest(async (req, res) => {
     institution,
   }));
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const createdSchedules = await ClassSchedule.insertMany(
-      classScheduleDocuments
+      classScheduleDocuments,
+      { session }
     );
+
+    // Generate attendance records for each created class schedule
+    for (const schedule of createdSchedules) {
+      const students = await Student.find({
+        batch: schedule.batch,
+        institution,
+      }).session(session);
+
+      const attendanceRecords = students.map((student) => ({
+        attendeeId: student._id,
+        attendeeModel: 'Student',
+        date: moment(schedule.startTime).startOf('day').toDate(),
+        status: 'Absent', // Default status, can be updated later
+      }));
+
+      await Attendance.insertMany(attendanceRecords, { session });
+    }
+
+    await session.commitTransaction();
+    session.endSession();
     res.status(201).json({ success: true, classSchedules: createdSchedules });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     console.error(error);
     throw new APIError(500, 'Error creating class schedules', error);
   }
@@ -132,7 +161,7 @@ const getClassSchedules = handleAsyncRequest(async (req, res) => {
       },
     });
 
-  if (!classSchedules || classSchedules.length === 0) {
+  if (!classSchedules) {
     throw new APIError(404, 'Class schedules not found');
   }
   res.json({ success: true, classSchedules });

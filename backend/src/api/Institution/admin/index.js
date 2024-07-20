@@ -13,6 +13,7 @@ import { authMiddleware } from '../../../middleware/authMiddleware.js';
 import DepartmentAPI from './department.js';
 import { ModuleAPI } from './module.js';
 import { ClassScheduleAPI } from './scheduleClass.js';
+import { AttendanceAPI } from './attendance.js';
 
 export class InstitutionAdminAPI {
   static instance() {
@@ -27,6 +28,7 @@ export class InstitutionAdminAPI {
     router.use('/department', DepartmentAPI.instance());
     router.use('/module', ModuleAPI.instance());
     router.use('/routine', ClassScheduleAPI.instance());
+    router.use('/attendance', AttendanceAPI.instance());
     return router;
   }
 }
