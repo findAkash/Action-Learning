@@ -25,71 +25,16 @@ const getAttendanceRecords = handleAsyncRequest(async (req, res) => {
   filter.institution = institution;
 
   if (batch) {
-    // Find all class schedules for the given batch
-    const classSchedules = await ClassSchedule.find({ batch })
-      .select('_id')
-      .exec();
-    filter.classSchedule = {
-      $in: classSchedules.map((schedule) => schedule._id),
-    };
+    filter.batch = batch;
   }
 
   if (module) {
-    // Find all class schedules for the given module
-    const classSchedules = await ClassSchedule.find({ module })
-      .select('_id')
-      .exec();
-    filter.classSchedule = {
-      $in: classSchedules.map((schedule) => schedule._id),
-    };
+    filter.ClassSchedule = { module };
   }
 
   if (student) {
     // Find all attendance records for the given student
     filter.attendeeId = student;
-  }
-
-  if (date) {
-    let startDate;
-    let endDate;
-
-    if (moment(date, 'YYYY-MM-DD', true).isValid()) {
-      // Handle specific date
-      startDate = moment(date).startOf('day').toDate();
-      endDate = moment(date).endOf('day').toDate();
-    } else {
-      // Handle predefined ranges
-      switch (date.toLowerCase()) {
-        case 'today':
-          startDate = moment().startOf('day').toDate();
-          endDate = moment().endOf('day').toDate();
-          break;
-        case 'tomorrow':
-          startDate = moment().add(1, 'day').startOf('day').toDate();
-          endDate = moment().add(1, 'day').endOf('day').toDate();
-          break;
-        case 'yesterday':
-          startDate = moment().subtract(1, 'day').startOf('day').toDate();
-          endDate = moment().subtract(1, 'day').endOf('day').toDate();
-          break;
-        case 'thisweek':
-          startDate = moment().startOf('week').toDate();
-          endDate = moment().endOf('week').toDate();
-          break;
-        case 'nextweek':
-          startDate = moment().add(1, 'week').startOf('week').toDate();
-          endDate = moment().add(1, 'week').endOf('week').toDate();
-          break;
-        case 'lastweek':
-          startDate = moment().subtract(1, 'week').startOf('week').toDate();
-          endDate = moment().subtract(1, 'week').endOf('week').toDate();
-          break;
-        default:
-          throw new APIError(400, 'Invalid date format');
-      }
-    }
-
-    filter.date = { $gte: startDate, $lte: endDate };
   }
 
   try {
@@ -111,7 +56,7 @@ const getAttendanceRecords = handleAsyncRequest(async (req, res) => {
         ],
       });
 
-    if (!attendanceRecords || attendanceRecords.length === 0) {
+    if (!attendanceRecords) {
       throw new APIError(404, 'No attendance records found');
     }
 

@@ -25,6 +25,21 @@ const AttendanceSchema = new Schema({
   time: {
     type: String, // Store time as string in 'HH:mm' format
   },
+  batch: {
+    type: Schema.Types.ObjectId,
+    ref: 'Batch',
+    required: true,
+  },
+  institution: {
+    type: Schema.Types.ObjectId,
+    ref: 'Institutions',
+    required: true,
+  },
+  classSchedule: {
+    type: Schema.Types.ObjectId,
+    ref: 'ClassSchedule',
+    required: true,
+  },
 });
 
 // Add a pre-save hook to ensure `time` is provided when `status` is 'Late'
