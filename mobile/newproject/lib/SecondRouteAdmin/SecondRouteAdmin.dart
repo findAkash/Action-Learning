@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../AdminCourseScreen/AdminCourseScreen.dart';
 import '../AdminHomeScreen/AdminHomeScreen.dart';
 import '../AdminSettingsScreen/adminSettingsScreen.dart';
 import '../AdminTrackStudentScreen/adminTrackStudent.dart';
@@ -24,7 +23,6 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
     super.initState();
     _widgetOptions = [
       AdminHomeScreen(token: widget.token),
-      AdminCourseScreen(),
       AdminTrackStudentScreen(token: widget.token),
       AdminSettingsScreen(),
     ];
@@ -49,10 +47,6 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.engineering_outlined), // Ensure you have an appropriate icon here
-            label: 'Course',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person), // Icon for students

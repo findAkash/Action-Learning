@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AddBatchInfoScreen/AddBatchInfoScreen.dart';
+import '../AddminBatchScreen/addBatchPage.dart';
 
 class AdminBatchInfoPage extends StatefulWidget {
   const AdminBatchInfoPage({super.key, required this.token});
@@ -15,6 +16,7 @@ class AdminBatchInfoPage extends StatefulWidget {
 
 class _AdminBatchInfoPageState extends State<AdminBatchInfoPage> {
   List<dynamic> batches = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -38,26 +40,55 @@ class _AdminBatchInfoPageState extends State<AdminBatchInfoPage> {
         final Map<String, dynamic> data = jsonDecode(response.body);
         setState(() {
           batches = data['batches'];
+          isLoading = false;
         });
       } else {
         print('Failed to fetch batches: ${response.statusCode}');
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       print('Error: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
+  }
+
+  Future<void> navigateToAddBatch() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddBatchPage(token: widget.token)),
+    );
+    if (result == true) {
+      fetchBatches(); // Refresh the batch list if a new batch was added
+    }
+  }
+
+  Future<void> _refreshBatches() async {
+    await fetchBatches();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyan,
         title: Text("Current Batches"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: navigateToAddBatch,
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: batches.isEmpty
-            ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+        onRefresh: _refreshBatches,
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16.0),
           itemCount: batches.length,
           itemBuilder: (context, index) {
             return Card(

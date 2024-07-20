@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import '../AddBatchInfoScreen/AddBatchInfoScreen.dart';
-import '../AdminAddStudentScreen/AdminAddStudentScreen.dart';
-import '../AddminBatchScreen/addBatchPage.dart';
 import '../AdminBatchInfoScreen/adminBatchInfoScreen.dart';
+import '../AdminDepartmentScreen/adminDepartmentScreen.dart';
+import '../AdminStudentPage/adminStudentPage.dart';
+import '../AdminTeacherScreen/adminTeacherPage.dart';
+import '../AdminCourseScreen/adminCourseScreen.dart';  // Import the new screen
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key, required this.token});
@@ -98,9 +96,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   SizedBox(height: 10), // Reduced spacing between rows
                   buildCardRow(context, "Student", Icons.school, "Teacher", Icons.person),
                   SizedBox(height: 10), // Reduced spacing between rows
-                  buildCardRow(context, "Department", Icons.apartment, "Batch", Icons.layers),
+                  buildCardRow(context, "Batch", Icons.layers, "Department", Icons.apartment),
                   SizedBox(height: 10), // Reduced spacing between rows
-                  buildCardRow(context, "A", Icons.label, "B", Icons.label),
+                  buildCardRow(context, "Course", Icons.book, "B", Icons.label),  // Updated this row
                 ],
               ),
             ),
@@ -161,7 +159,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             label1,
             icon1,
                 () {
-              // Add your onPressed logic here
+              if (label1 == "Student") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminStudentPage(token: widget.token)),
+                );
+              } else if (label1 == "Batch") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminBatchInfoPage(token: widget.token)),
+                );
+              } else if (label1 == "Course") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminCourseScreen(token: widget.token)),
+                );
+              }
             },
           ),
         ),
@@ -171,15 +184,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             context,
             label2,
             icon2,
-            label2 == "Batch"
-                ? () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AdminBatchInfoPage(token: widget.token)),
-              );
-            }
-                : () {
-              // Add your onPressed logic here
+                () {
+              if (label2 == "Teacher") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminTeacherPage(token: widget.token)),
+                );
+              } else if (label2 == "Department") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminDepartmentScreen(token: widget.token)),
+                );
+              }
             },
           ),
         ),
