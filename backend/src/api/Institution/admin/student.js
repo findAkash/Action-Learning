@@ -49,8 +49,8 @@ const createStudent = handleAsyncRequest(async (req, res) => {
 
     // Create the student
     const student = new Student({
-      userId: user._id,
-      institutionId,
+      user: user._id,
+      institution: institutionId,
       batch,
       enrollments: [],
     });
@@ -69,8 +69,12 @@ const createStudent = handleAsyncRequest(async (req, res) => {
 });
 
 const getStudents = handleAsyncRequest(async (req, res) => {
-  const students = await Student.find().populate(
-    'userId institutionId batch enrollments'
+  const filter = {};
+  const institutionId = req.user.institution;
+  filter.institution = institutionId;
+  if (req.query.batch) filter.batch = req.query.batch;
+  const students = await Student.find(filter).populate(
+    'user institution batch enrollments'
   );
   if (!students) {
     throw new APIError(404, 'Students not found');
@@ -80,7 +84,7 @@ const getStudents = handleAsyncRequest(async (req, res) => {
 
 const getStudentById = handleAsyncRequest(async (req, res) => {
   const student = await Student.findById(req.params.id).populate(
-    'userId institutionId batch enrollments'
+    'user institution batch enrollments'
   );
   if (!student) {
     throw new APIError(404, 'Student not found');
@@ -92,7 +96,7 @@ const updateStudent = handleAsyncRequest(async (req, res) => {
   const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
-  }).populate('userId institutionId batch enrollments');
+  }).populate('user institution batch enrollments');
   if (!student) {
     throw new APIError(404, 'Student not found');
   }

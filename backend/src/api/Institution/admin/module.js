@@ -20,29 +20,21 @@ export class ModuleAPI {
 }
 
 const createModule = handleAsyncRequest(async (req, res) => {
-  const {
-    title,
-    description,
-    teachers,
-    credit,
-    institutionId,
-    batchId,
-    course,
-  } = req.body;
+  const { title, description, teachers, credit, batch, course } = req.body;
 
   // Check if the module already exists
   const isExist = await Module.findOne({ title, course });
   if (isExist) {
     throw new APIError(400, 'Module already exists');
   }
-
+  const institution = req.user.institution;
   const module = new Module({
     title,
     description,
     teachers,
     credit,
-    institutionId,
-    batchId,
+    institution,
+    batch,
     course,
   });
 
@@ -51,18 +43,35 @@ const createModule = handleAsyncRequest(async (req, res) => {
 });
 
 const getModules = handleAsyncRequest(async (req, res) => {
-  const modules = await Module.find().populate(
-    'institutionId batchId course teachers.teacherId'
-  );
+  const institution = req.user.institution;
+  const modules = await Module.find({ institution: institution })
+    .populate({
+      path: 'institution',
+    })
+    .populate({
+      path: 'batch',
+    })
+    .populate({
+      path: 'course',
+    })
+    .populate({
+      path: 'teachers.teacher',
+      populate: {
+        path: 'user',
+        select: 'firstName lastName email',
+      },
+    });
+
   if (!modules) {
     throw new APIError(404, 'Modules not found');
   }
+
   res.json({ success: true, modules });
 });
 
 const getModuleById = handleAsyncRequest(async (req, res) => {
   const module = await Module.findById(req.params.id).populate(
-    'institutionId batchId course teachers.teacherId'
+    'institution batch course teachers.teacher'
   );
   if (!module) {
     throw new APIError(404, 'Module not found');
@@ -74,7 +83,7 @@ const updateModule = handleAsyncRequest(async (req, res) => {
   const module = await Module.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
-  }).populate('institutionId batchId course teachers.teacherId');
+  }).populate('institution batch course teachers.teacher');
   if (!module) {
     throw new APIError(404, 'Module not found');
   }

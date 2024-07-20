@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const StudentSchema = new Schema({
-  userId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  institutionId: {
+  institution: {
     type: Schema.Types.ObjectId,
     ref: 'Institutions',
     required: true,
