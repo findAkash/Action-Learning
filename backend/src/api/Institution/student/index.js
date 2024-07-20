@@ -39,7 +39,7 @@ const login = handleAsyncRequest(async (req, res) => {
   if (!isMatch) {
     throw new APIError(400, 'Invalid email or password');
   }
-  const student = await Student.findOne({ userId: user._id });
+  const student = await Student.findOne({ user: user._id });
   const token = await user.generateToken();
   return { success: true, user, student };
 });

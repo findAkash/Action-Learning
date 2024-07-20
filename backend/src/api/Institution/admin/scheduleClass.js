@@ -58,6 +58,9 @@ const createClassSchedules = handleAsyncRequest(async (req, res) => {
         attendeeModel: 'Student',
         date: moment(schedule.startTime).startOf('day').toDate(),
         status: 'Absent', // Default status, can be updated later
+        classSchedule: schedule._id,
+        institution,
+        batch: schedule.batch,
       }));
 
       await Attendance.insertMany(attendanceRecords, { session });
