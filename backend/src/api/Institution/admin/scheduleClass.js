@@ -56,7 +56,7 @@ const createClassSchedules = handleAsyncRequest(async (req, res) => {
       const attendanceRecords = students.map((student) => ({
         attendeeId: student._id,
         attendeeModel: 'Student',
-        date: moment(schedule.startTime).startOf('day').toDate(),
+        date: schedule.startTime,
         status: 'Absent', // Default status, can be updated later
         classSchedule: schedule._id,
         institution,
