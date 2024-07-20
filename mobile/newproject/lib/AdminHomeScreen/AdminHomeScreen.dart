@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import '../AdminBatchInfoScreen/adminBatchInfoScreen.dart';
 import '../AdminDepartmentScreen/adminDepartmentScreen.dart';
 import '../AdminStudentPage/adminStudentPage.dart';
 import '../AdminTeacherScreen/adminTeacherPage.dart';
-import '../AdminCourseScreen/adminCourseScreen.dart';  // Import the new screen
+import '../AdminCourseScreen/adminCourseScreen.dart'; // Import the new screen
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key, required this.token});
@@ -15,94 +18,151 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
+  int batchCount = 0;
+  int studentCount = 0;
+  int departmentCount = 0;
+  int courseCount = 0;
+  int moduleCount = 0;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDashboardData();
+  }
+
+  Future<void> fetchDashboardData() async {
+    final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/dashboard';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.token}',
+        },
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body)['data'];
+        setState(() {
+          batchCount = data['countBatch'];
+          studentCount = data['countStudent'];
+          departmentCount = data['countDepartment'];
+          courseCount = data['countCourse'];
+          moduleCount = data['countModule'];
+          isLoading = false;
+        });
+      } else {
+        print('Failed to fetch dashboard data: ${response.statusCode}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            Center(
-              child: Text(
-                "Admin Dashboard",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+        onRefresh: fetchDashboardData,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              Center(
+                child: Text(
+                  "Admin Dashboard",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: buildNonInteractiveCard(
-                          context,
-                          "Batch",
-                          "13",
+              SizedBox(height: 20),
+              Center(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: buildNonInteractiveCard(
+                            context,
+                            "Batch",
+                            batchCount.toString(),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10), // Spacing between cards
-                      Expanded(
-                        child: buildNonInteractiveCard(
-                          context,
-                          "Student",
-                          "493",
+                        SizedBox(width: 10), // Spacing between cards
+                        Expanded(
+                          child: buildNonInteractiveCard(
+                            context,
+                            "Student",
+                            studentCount.toString(),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10), // Spacing between cards
-                      Expanded(
-                        child: buildNonInteractiveCard(
-                          context,
-                          "Department",
-                          "6",
+                        SizedBox(width: 10), // Spacing between cards
+                        Expanded(
+                          child: buildNonInteractiveCard(
+                            context,
+                            "Department",
+                            departmentCount.toString(),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5), // Reduced spacing between rows
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: buildNonInteractiveCard(
-                          context,
-                          "Course",
-                          "29",
+                      ],
+                    ),
+                    SizedBox(height: 5), // Reduced spacing between rows
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: buildNonInteractiveCard(
+                            context,
+                            "Course",
+                            courseCount.toString(),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10), // Spacing between cards
-                      Expanded(
-                        child: buildNonInteractiveCard(
-                          context,
-                          "Add",
-                          "",
+                        SizedBox(width: 10), // Spacing between cards
+                        Expanded(
+                          child: buildNonInteractiveCard(
+                            context,
+                            "Module",
+                            moduleCount.toString(),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10), // Spacing between cards
-                      Expanded(
-                        child: buildNonInteractiveCard(
-                          context,
-                          "Add",
-                          "",
+                        SizedBox(width: 10), // Spacing between cards
+                        Expanded(
+                          child: buildNonInteractiveCard(
+                            context,
+                            "Add",
+                            "",
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10), // Reduced spacing between rows
-                  buildCardRow(context, "Student", Icons.school, "Teacher", Icons.person),
-                  SizedBox(height: 10), // Reduced spacing between rows
-                  buildCardRow(context, "Batch", Icons.layers, "Department", Icons.apartment),
-                  SizedBox(height: 10), // Reduced spacing between rows
-                  buildCardRow(context, "Course", Icons.book, "B", Icons.label),  // Updated this row
-                ],
+                      ],
+                    ),
+                    SizedBox(height: 10), // Reduced spacing between rows
+                    buildCardRow(context, "Student", Icons.school, "Teacher", Icons.person),
+                    SizedBox(height: 10), // Reduced spacing between rows
+                    buildCardRow(context, "Batch", Icons.layers, "Department", Icons.apartment),
+                    SizedBox(height: 10), // Reduced spacing between rows
+                    buildCardRow(context, "Course", Icons.book, "B", Icons.label), // Updated this row
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
