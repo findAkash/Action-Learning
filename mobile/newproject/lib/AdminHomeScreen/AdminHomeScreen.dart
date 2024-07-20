@@ -4,9 +4,10 @@ import 'dart:convert';
 
 import '../AdminBatchInfoScreen/adminBatchInfoScreen.dart';
 import '../AdminDepartmentScreen/adminDepartmentScreen.dart';
+import '../AdminModuleScreen/adminModuleScreen.dart';
 import '../AdminStudentPage/adminStudentPage.dart';
 import '../AdminTeacherScreen/adminTeacherPage.dart';
-import '../AdminCourseScreen/adminCourseScreen.dart'; // Import the new screen
+import '../AdminCourseScreen/adminCourseScreen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key, required this.token});
@@ -23,6 +24,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int departmentCount = 0;
   int courseCount = 0;
   int moduleCount = 0;
+  int teacherCount = 0; // Added teacher count
   bool isLoading = true;
 
   @override
@@ -54,6 +56,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           departmentCount = data['countDepartment'];
           courseCount = data['countCourse'];
           moduleCount = data['countModule'];
+          teacherCount = data['countTeacher']; // Updated with teacher count
           isLoading = false;
         });
       } else {
@@ -130,14 +133,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         Expanded(
                           child: buildNonInteractiveCard(
                             context,
-                            "Course",
-                            courseCount.toString(),
-                          ),
-                        ),
-                        SizedBox(width: 10), // Spacing between cards
-                        Expanded(
-                          child: buildNonInteractiveCard(
-                            context,
                             "Module",
                             moduleCount.toString(),
                           ),
@@ -146,8 +141,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         Expanded(
                           child: buildNonInteractiveCard(
                             context,
-                            "Add",
-                            "",
+                            "Course",
+                            courseCount.toString(),
+                          ),
+                        ),
+                        SizedBox(width: 10), // Spacing between cards
+                        Expanded(
+                          child: buildNonInteractiveCard(
+                            context,
+                            "Teacher", // Updated to "Teacher"
+                            teacherCount.toString(),
                           ),
                         ),
                       ],
@@ -157,7 +160,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     SizedBox(height: 10), // Reduced spacing between rows
                     buildCardRow(context, "Batch", Icons.layers, "Department", Icons.apartment),
                     SizedBox(height: 10), // Reduced spacing between rows
-                    buildCardRow(context, "Course", Icons.book, "B", Icons.label), // Updated this row
+                    buildCardRow(context, "Module", Icons.bookmark, "Course", Icons.book), // Updated this row
                   ],
                 ),
               ),
@@ -229,10 +232,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => AdminBatchInfoPage(token: widget.token)),
                 );
-              } else if (label1 == "Course") {
+              }  else if (label1 == "Module") {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminCourseScreen(token: widget.token)),
+                  MaterialPageRoute(builder: (context) => AdminModuleScreen(token: widget.token)),
                 );
               }
             },
@@ -256,6 +259,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   MaterialPageRoute(builder: (context) => AdminDepartmentScreen(token: widget.token)),
                 );
               }
+              else if (label2 == "Course") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminCourseScreen(token: widget.token)),
+                );
+              }
+
             },
           ),
         ),

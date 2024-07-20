@@ -18,7 +18,46 @@ class _AdminAddCourseScreenState extends State<AdminAddCourseScreen> {
   final TextEditingController durationController = TextEditingController();
   final TextEditingController levelController = TextEditingController();
   final TextEditingController semesterController = TextEditingController();
-  final TextEditingController departmentController = TextEditingController();
+
+  Map<String, String> departments = {};
+  String? selectedDepartmentId;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDepartments();
+  }
+
+  Future<void> fetchDepartments() async {
+    final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/department/list';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.token}',
+        },
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        final List<dynamic> departmentsData = data['departments'];
+        setState(() {
+          departments = {
+            for (var dept in departmentsData) dept['_id']: dept['name']
+          };
+        });
+      } else {
+        print('Failed to fetch departments: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   Future<void> addCourse() async {
     final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/course/create';
@@ -37,7 +76,7 @@ class _AdminAddCourseScreenState extends State<AdminAddCourseScreen> {
           'duration': int.parse(durationController.text),
           'level': levelController.text,
           'semester': int.parse(semesterController.text),
-          'department': departmentController.text,
+          'department': selectedDepartmentId,
         }),
       );
 
@@ -93,9 +132,21 @@ class _AdminAddCourseScreenState extends State<AdminAddCourseScreen> {
                 decoration: InputDecoration(labelText: 'Semester'),
                 keyboardType: TextInputType.number,
               ),
-              TextField(
-                controller: departmentController,
+              SizedBox(height: 10),
+              DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: 'Department'),
+                items: departments.entries.map((entry) {
+                  return DropdownMenuItem<String>(
+                    value: entry.key,
+                    child: Text(entry.value),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedDepartmentId = value;
+                  });
+                },
+                value: selectedDepartmentId,
               ),
               SizedBox(height: 20),
               ElevatedButton(
