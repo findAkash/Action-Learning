@@ -12,6 +12,8 @@ import { EnrollmentAPI } from './enrollment.js';
 import { RoutineAPI } from './routine.js';
 import { authMiddleware } from '../../../middleware/authMiddleware.js';
 import DepartmentAPI from './department.js';
+import { ModuleAPI } from './module.js';
+import { ClassScheduleAPI } from './scheduleClass.js';
 
 export class InstitutionAdminAPI {
   static instance() {
@@ -25,6 +27,8 @@ export class InstitutionAdminAPI {
     router.use('/enrollment', EnrollmentAPI.instance());
     router.use('routine', RoutineAPI.instance());
     router.use('/department', DepartmentAPI.instance());
+    router.use('/module', ModuleAPI.instance());
+    router.use('/schedule-class', ClassScheduleAPI.instance());
     return router;
   }
 }

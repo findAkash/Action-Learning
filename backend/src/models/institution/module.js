@@ -1,19 +1,22 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
+const TeacherRoleSchema = new Schema({
+  teacher: { type: Schema.Types.ObjectId, ref: 'Teacher', required: true },
+  role: { type: String, required: true }, // e.g., 'module leader', 'teacher'
+});
+
 const ModuleSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  teachers: [
-    { teacherId: Schema.Types.ObjectId, title: String, ref: 'Teacher' },
-  ],
+  teachers: [TeacherRoleSchema], // Embedded sub-document for each teacher
   credit: { type: Number, required: true },
-  institutionId: {
+  institution: {
     type: Schema.Types.ObjectId,
-    ref: 'Institution',
+    ref: 'Institutions',
     required: true,
   },
-  batchId: { type: Schema.Types.ObjectId, ref: 'Batch', required: true },
+  batch: { type: Schema.Types.ObjectId, ref: 'Batch', required: true },
   course: {
     type: Schema.Types.ObjectId,
     ref: 'Course',
@@ -21,4 +24,4 @@ const ModuleSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('Module', ModuleSchema);
+export const Module = mongoose.model('Module', ModuleSchema);

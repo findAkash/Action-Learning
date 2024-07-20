@@ -41,7 +41,10 @@ const createBatch = handleAsyncRequest(async (req, res) => {
 });
 
 const getBatches = handleAsyncRequest(async (req, res) => {
-  const batches = await Batch.find().populate('institutionId');
+  const institutionId = req.user.institution;
+  const batches = await Batch.find({ institutionId: institutionId }).populate(
+    'institutionId'
+  );
   if (!batches) {
     throw new APIError(404, 'Batches not found');
   }

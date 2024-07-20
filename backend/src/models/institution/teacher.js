@@ -3,17 +3,17 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const TeacherSchema = new Schema({
-  userId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  institutionId: {
+  institution: {
     type: Schema.Types.ObjectId,
-    ref: 'Institution',
+    ref: 'Institutions',
     required: true,
   },
-  courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+  modules: [{ type: Schema.Types.ObjectId, ref: 'Module' }],
 });
 
 export const Teacher = mongoose.model('Teacher', TeacherSchema);

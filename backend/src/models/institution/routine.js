@@ -42,6 +42,11 @@ const RoutineSchema = new Schema({
     ref: 'Batch',
     required: true,
   },
+  institution: {
+    type: Schema.Types.ObjectId,
+    ref: 'Institutions',
+    required: true,
+  },
 });
 
 export const Routine = mongoose.model('Routine', RoutineSchema);
