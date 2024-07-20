@@ -71,7 +71,7 @@ const createStudent = handleAsyncRequest(async (req, res) => {
 const getStudents = handleAsyncRequest(async (req, res) => {
   const institution = req.user.institution;
   const students = await Student.find({ institution: institution }).populate(
-    'userId institutionId batch enrollments'
+    'user institution batch enrollments'
   );
   if (!students) {
     throw new APIError(404, 'Students not found');
@@ -81,7 +81,7 @@ const getStudents = handleAsyncRequest(async (req, res) => {
 
 const getStudentById = handleAsyncRequest(async (req, res) => {
   const student = await Student.findById(req.params.id).populate(
-    'userId institutionId batch enrollments'
+    'user institution batch enrollments'
   );
   if (!student) {
     throw new APIError(404, 'Student not found');
@@ -93,7 +93,7 @@ const updateStudent = handleAsyncRequest(async (req, res) => {
   const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
-  }).populate('userId institutionId batch enrollments');
+  }).populate('user institution batch enrollments');
   if (!student) {
     throw new APIError(404, 'Student not found');
   }

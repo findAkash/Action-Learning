@@ -9,7 +9,6 @@ import { StudentAPI } from './student.js';
 import { CourseAPI } from './course.js';
 import { BatchAPI } from './batch.js';
 import { EnrollmentAPI } from './enrollment.js';
-import { RoutineAPI } from './routine.js';
 import { authMiddleware } from '../../../middleware/authMiddleware.js';
 import DepartmentAPI from './department.js';
 import { ModuleAPI } from './module.js';
@@ -25,10 +24,9 @@ export class InstitutionAdminAPI {
     router.use('/course', CourseAPI.instance());
     router.use('/batch', BatchAPI.instance());
     router.use('/enrollment', EnrollmentAPI.instance());
-    router.use('routine', RoutineAPI.instance());
     router.use('/department', DepartmentAPI.instance());
     router.use('/module', ModuleAPI.instance());
-    router.use('/schedule-class', ClassScheduleAPI.instance());
+    router.use('/routine', ClassScheduleAPI.instance());
     return router;
   }
 }

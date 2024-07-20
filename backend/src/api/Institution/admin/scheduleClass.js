@@ -4,6 +4,7 @@ import {
   APIError,
 } from '../../../helpers/handle-async-request.js';
 import { ClassSchedule } from '../../../models/institution/scheduleClass.js';
+import moment from 'moment';
 
 export class ClassScheduleAPI {
   static instance() {
@@ -45,9 +46,11 @@ const createClassSchedules = handleAsyncRequest(async (req, res) => {
 });
 
 const getClassSchedules = handleAsyncRequest(async (req, res) => {
-  const { classroom, module, teacher, batch, course } = req.query;
+  const { classroom, module, teacher, batch, course, date, mode } = req.query;
 
   const filter = {};
+  const institution = req.user.institution;
+  filter.institution = institution;
 
   if (classroom) {
     filter.location = classroom;
@@ -65,11 +68,71 @@ const getClassSchedules = handleAsyncRequest(async (req, res) => {
     filter.course = course;
   }
 
-  const classSchedules = await ClassSchedule.find(filter).populate(
-    'module teacher batch institution'
-  );
+  if (date) {
+    let startDate;
+    let endDate;
 
-  if (!classSchedules) {
+    if (moment(date, 'YYYY-MM-DD', true).isValid()) {
+      // Handle specific date
+      startDate = moment(date).startOf('day').toDate();
+      endDate =
+        mode === 'weekly'
+          ? moment(date).endOf('week').toDate()
+          : moment(date).endOf('day').toDate();
+    } else {
+      // Handle predefined ranges
+      switch (date.toLowerCase()) {
+        case 'today':
+          startDate = moment().startOf('day').toDate();
+          endDate = moment().endOf('day').toDate();
+          break;
+        case 'tomorrow':
+          startDate = moment().add(1, 'day').startOf('day').toDate();
+          endDate = moment().add(1, 'day').endOf('day').toDate();
+          break;
+        case 'yesterday':
+          startDate = moment().subtract(1, 'day').startOf('day').toDate();
+          endDate = moment().subtract(1, 'day').endOf('day').toDate();
+          break;
+        case 'thisweek':
+          startDate = moment().startOf('week').toDate();
+          endDate = moment().endOf('week').toDate();
+          break;
+        case 'nextweek':
+          startDate = moment().add(1, 'week').startOf('week').toDate();
+          endDate = moment().add(1, 'week').endOf('week').toDate();
+          break;
+        case 'lastweek':
+          startDate = moment().subtract(1, 'week').startOf('week').toDate();
+          endDate = moment().subtract(1, 'week').endOf('week').toDate();
+          break;
+        default:
+          throw new APIError(400, 'Invalid date format');
+      }
+    }
+
+    filter.startTime = { $gte: startDate, $lte: endDate };
+  }
+
+  const classSchedules = await ClassSchedule.find(filter)
+    .populate({
+      path: 'module',
+      select: 'title description credit',
+    })
+    .populate({
+      path: 'batch',
+      select: 'batchName',
+    })
+    .populate({
+      path: 'teacher',
+      select: 'user',
+      populate: {
+        path: 'user',
+        select: 'firstName lastName email',
+      },
+    });
+
+  if (!classSchedules || classSchedules.length === 0) {
     throw new APIError(404, 'Class schedules not found');
   }
   res.json({ success: true, classSchedules });
