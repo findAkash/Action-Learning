@@ -12,8 +12,8 @@ class AddBatchPage extends StatefulWidget {
 
 class _AddBatchPageState extends State<AddBatchPage> {
   final TextEditingController batchNameController = TextEditingController();
-  final TextEditingController startDateController = TextEditingController();
-  final TextEditingController endDateController = TextEditingController();
+  DateTime? startDate;
+  DateTime? endDate;
 
   Future<void> createBatch() async {
     final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/batch/create';
@@ -27,8 +27,8 @@ class _AddBatchPageState extends State<AddBatchPage> {
         },
         body: jsonEncode({
           'batchName': batchNameController.text,
-          'startDate': startDateController.text,
-          'endDate': endDateController.text,
+          'startDate': startDate?.toIso8601String(),
+          'endDate': endDate?.toIso8601String(),
         }),
       );
 
@@ -58,6 +58,31 @@ class _AddBatchPageState extends State<AddBatchPage> {
     }
   }
 
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStartDate) {
+          startDate = picked;
+        } else {
+          endDate = picked;
+        }
+      });
+    }
+  }
+
+  String _formatDate(DateTime? date) {
+    if (date == null) {
+      return 'Select Date';
+    }
+    return date.toIso8601String().split('T').first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,20 +104,16 @@ class _AddBatchPageState extends State<AddBatchPage> {
                 ),
               ),
               SizedBox(height: 16.0),
-              TextField(
-                controller: startDateController,
-                decoration: InputDecoration(
-                  labelText: 'Start Date (YYYY-MM-DDTHH:MM:SS.SSSZ)',
-                  border: OutlineInputBorder(),
-                ),
+              ListTile(
+                title: Text('Start Date: ${_formatDate(startDate)}'),
+                trailing: Icon(Icons.calendar_today),
+                onTap: () => _selectDate(context, true),
               ),
               SizedBox(height: 16.0),
-              TextField(
-                controller: endDateController,
-                decoration: InputDecoration(
-                  labelText: 'End Date (YYYY-MM-DDTHH:MM:SS.SSSZ)',
-                  border: OutlineInputBorder(),
-                ),
+              ListTile(
+                title: Text('End Date: ${_formatDate(endDate)}'),
+                trailing: Icon(Icons.calendar_today),
+                onTap: () => _selectDate(context, false),
               ),
               SizedBox(height: 20.0),
               Center(

@@ -15,9 +15,7 @@ class _AdminAddModuleScreenState extends State<AdminAddModuleScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController creditController = TextEditingController();
-  final TextEditingController roleController = TextEditingController(text: 'module leader');
-  final TextEditingController levelController = TextEditingController();
-  final TextEditingController semesterController = TextEditingController();
+  final TextEditingController roleController = TextEditingController();
 
   String? selectedTeacherId;
   String? selectedBatchId;
@@ -130,7 +128,7 @@ class _AdminAddModuleScreenState extends State<AdminAddModuleScreen> {
             {
               'teacher': selectedTeacherId,
               'role': roleController.text,
-            },
+            }
           ],
           'credit': int.parse(creditController.text),
           'batch': selectedBatchId,
@@ -178,15 +176,6 @@ class _AdminAddModuleScreenState extends State<AdminAddModuleScreen> {
                 decoration: InputDecoration(labelText: 'Credit'),
                 keyboardType: TextInputType.number,
               ),
-              TextField(
-                controller: levelController,
-                decoration: InputDecoration(labelText: 'Level'),
-              ),
-              TextField(
-                controller: semesterController,
-                decoration: InputDecoration(labelText: 'Semester'),
-                keyboardType: TextInputType.number,
-              ),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: 'Teacher'),
                 value: selectedTeacherId,
@@ -201,6 +190,10 @@ class _AdminAddModuleScreenState extends State<AdminAddModuleScreen> {
                     selectedTeacherId = value;
                   });
                 },
+              ),
+              TextField(
+                controller: roleController,
+                decoration: InputDecoration(labelText: 'Role'),
               ),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: 'Batch'),

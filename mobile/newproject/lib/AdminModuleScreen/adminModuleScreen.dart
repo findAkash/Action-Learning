@@ -95,18 +95,17 @@ class _AdminModuleScreenState extends State<AdminModuleScreen> {
               margin: EdgeInsets.all(10.0),
               child: ListTile(
                 title: Text(
-                  module['name'],
+                  module['title'] ?? 'No title',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Code: ${module['code']}'),
-                    Text('Credit: ${module['credit']}'),
-                    Text('Duration: ${module['duration']} months'),
-                    Text('Level: ${module['level']}'),
-                    Text('Semester: ${module['semester']}'),
-                    Text('Department: ${module['department']['name']}'),
+                    Text('Description: ${module['description'] ?? 'No description'}'),
+                    Text('Teacher: ${module['teachers'] != null && module['teachers'].isNotEmpty ? '${module['teachers'][0]['teacher']['user']['firstName']} ${module['teachers'][0]['teacher']['user']['lastName']}' : 'No teacher'}'),
+                    Text('Credit: ${module['credit']?.toString() ?? 'No credit'}'),
+                    Text('Batch: ${module['batch'] != null ? module['batch']['batchName'] : 'No batch'}'),
+                    Text('Course: ${module['course'] != null ? module['course']['name'] : 'No course'}'),
                   ],
                 ),
               ),

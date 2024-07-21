@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AdminAddDepartmentScreen/adminAddDepartmentScreen.dart';
+import '../AdminDepartmentInfoScreen/adminDepartmentInfoScreen.dart';
 
 class AdminDepartmentScreen extends StatefulWidget {
   final String token;
@@ -69,6 +70,15 @@ class _AdminDepartmentScreenState extends State<AdminDepartmentScreen> {
     await fetchDepartments();
   }
 
+  void navigateToDepartmentInfo(Map<String, dynamic> department) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdminDepartmentInfoScreen(department: department),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,6 +117,7 @@ class _AdminDepartmentScreenState extends State<AdminDepartmentScreen> {
                     Text('Phone: ${department['institution']['phone']}'),
                   ],
                 ),
+                onTap: () => navigateToDepartmentInfo(department),
               ),
             );
           },

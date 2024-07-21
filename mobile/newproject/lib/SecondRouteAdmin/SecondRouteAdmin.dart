@@ -23,7 +23,6 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
     super.initState();
     _widgetOptions = [
       AdminHomeScreen(token: widget.token),
-      AdminTrackStudentScreen(token: widget.token),
       AdminSettingsScreen(),
     ];
   }
@@ -48,10 +47,7 @@ class _SecondRouteAdminState extends State<SecondRouteAdmin> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person), // Icon for students
-            label: 'Students',
-          ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.settings), // Icon for settings
             label: 'Settings',

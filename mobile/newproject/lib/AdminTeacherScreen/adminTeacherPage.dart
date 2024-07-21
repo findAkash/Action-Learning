@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AdminAddTeacherScreen/adminAddTeacherScreen.dart';
+import '../AdminTeacherInfoPage/adminTeacherInfoPage.dart';
 
 class AdminTeacherPage extends StatefulWidget {
   final String token;
@@ -73,6 +74,15 @@ class _AdminTeacherPageState extends State<AdminTeacherPage> {
     }
   }
 
+  void navigateToTeacherInfo(Map<String, dynamic> teacher) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdminTeacherInfoPage(teacher: teacher),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +122,7 @@ class _AdminTeacherPageState extends State<AdminTeacherPage> {
                     Text('Phone: ${teacher['institution']['phone']}'),
                   ],
                 ),
+                onTap: () => navigateToTeacherInfo(teacher),
               ),
             );
           },

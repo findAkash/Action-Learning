@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AdminAddStudentScreen/adminAddStudentScreen.dart';
+import '../AdminUpdateStudentScreen/adminUpdateStudentScreen.dart';
 
 class AdminStudentPage extends StatefulWidget {
   final String token;
@@ -67,6 +68,21 @@ class _AdminStudentPageState extends State<AdminStudentPage> {
     }
   }
 
+  Future<void> navigateToUpdateStudent(Map<String, dynamic> student) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdminUpdateStudentScreen(
+          token: widget.token,
+          student: student,
+        ),
+      ),
+    );
+    if (result == true) {
+      fetchStudents(); // Refresh the student list if the student was updated
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +122,7 @@ class _AdminStudentPageState extends State<AdminStudentPage> {
                     Text('Phone: ${student['institution']['phone']}'),
                   ],
                 ),
+                onTap: () => navigateToUpdateStudent(student),
               ),
             );
           },
