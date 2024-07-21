@@ -1,12 +1,9 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import { createPinia } from 'pinia';
-import vuetify from './plugins/vuetify';
+import store from './store';
+import './index.css'; // Ensure this includes TailwindCSS styles
 
-const app = createApp(App);
+console.log('API Base URL:', process.env.VUE_APP_API_BASE_URL);
 
-app.use(router);
-app.use(createPinia());
-app.use(vuetify);
-app.mount('#app');
+createApp(App).use(store).use(router).mount('#app');

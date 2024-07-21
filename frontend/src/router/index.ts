@@ -1,60 +1,21 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import UserLogin from '@/views/UserLogin.vue';
 import SuperAdminLogin from '@/views/SuperAdminLogin.vue';
-import AdminDashboard from '@/views/AdminDashboard.vue';
+import UserLogin from '@/views/UserLogin.vue';
 import SuperAdminDashboard from '@/views/SuperAdminDashboard.vue';
-import TeacherDashboard from '@/views/TeacherDashboard.vue';
-import StudentDashboard from '@/views/StudentDashboard.vue';
-import UserList from '@/views/UserList.vue';
-import InstitutionList from '@/views/InstitutionList.vue';
+import AdminDashboard from '@/views/AdminDashboard.vue';
+import InstitutionDetail from '@/views/InstitutionDetail.vue';
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'UserLogin',
-    component: UserLogin,
-  },
-  {
-    path: '/superadmin-login',
-    name: 'SuperAdminLogin',
-    component: SuperAdminLogin,
-  },
-  {
-    path: '/admin-dashboard',
-    name: 'AdminDashboard',
-    component: AdminDashboard,
-  },
-  {
-    path: '/superadmin-dashboard',
-    name: 'SuperAdminDashboard',
-    component: SuperAdminDashboard,
-    children: [
-      {
-        path: 'users',
-        name: 'UserList',
-        component: UserList,
-      },
-      {
-        path: 'institutions',
-        name: 'InstitutionList',
-        component: InstitutionList,
-      },
-    ],
-  },
-  {
-    path: '/teacher-dashboard',
-    name: 'TeacherDashboard',
-    component: TeacherDashboard,
-  },
-  {
-    path: '/student-dashboard',
-    name: 'StudentDashboard',
-    component: StudentDashboard,
-  },
+  { path: '/', redirect: '/login' },
+  { path: '/user-login', component: UserLogin },
+  { path: '/login', component: SuperAdminLogin },
+  { path: '/superadmin-dashboard', component: SuperAdminDashboard },
+  { path: '/admin-dashboard', component: AdminDashboard },
+  { path: '/institution/:id', component: InstitutionDetail },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 
