@@ -3,11 +3,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AdminBatchInfoScreen/adminBatchInfoScreen.dart';
+import '../AdminClassScreen/adminClassScreen.dart';
 import '../AdminDepartmentScreen/adminDepartmentScreen.dart';
 import '../AdminModuleScreen/adminModuleScreen.dart';
 import '../AdminStudentPage/adminStudentPage.dart';
 import '../AdminTeacherScreen/adminTeacherPage.dart';
 import '../AdminCourseScreen/adminCourseScreen.dart';
+import '../adminEnrollmentScreen/adminEnrollmentScreen.dart';
+
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key, required this.token});
@@ -161,6 +164,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     buildCardRow(context, "Batch", Icons.layers, "Department", Icons.apartment),
                     SizedBox(height: 10), // Reduced spacing between rows
                     buildCardRow(context, "Module", Icons.bookmark, "Course", Icons.book), // Updated this row
+                    SizedBox(height: 10), // Reduced spacing between rows
+                    buildCardRow(context, "Schedule", Icons.schedule, "Enrollment", Icons.assignment), // Added this row with valid icon
                   ],
                 ),
               ),
@@ -237,6 +242,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => AdminModuleScreen(token: widget.token)),
                 );
+              } else if (label1 == "Schedule") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminClassScreen(token: widget.token)),
+                );
               }
             },
           ),
@@ -263,6 +273,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AdminCourseScreen(token: widget.token)),
+                );
+              }
+              else if (label2 == "Enrollment") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminEnrollmentScreen(token: widget.token)),
                 );
               }
 

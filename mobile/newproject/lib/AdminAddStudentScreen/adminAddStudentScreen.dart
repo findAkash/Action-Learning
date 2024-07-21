@@ -15,13 +15,18 @@ class _AdminAddStudentScreenState extends State<AdminAddStudentScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController feeController = TextEditingController();
+  final TextEditingController discountController = TextEditingController();
   String? selectedBatch;
+  String? selectedCourse;
   Map<String, String> batchMap = {};
+  Map<String, String> courseMap = {};
 
   @override
   void initState() {
     super.initState();
     fetchBatches();
+    fetchCourses();
   }
 
   Future<void> fetchBatches() async {
@@ -52,6 +57,34 @@ class _AdminAddStudentScreenState extends State<AdminAddStudentScreen> {
     }
   }
 
+  Future<void> fetchCourses() async {
+    final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/course/list';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.token}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        setState(() {
+          courseMap = {
+            for (var course in data['courses']) course['name']: course['_id']
+          };
+          selectedCourse = courseMap.keys.first;
+        });
+      } else {
+        print('Failed to fetch courses: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   Future<void> createStudent() async {
     final String url = 'http://10.0.2.2:8000/api/v1/institution/admin/student/create';
 
@@ -68,6 +101,9 @@ class _AdminAddStudentScreenState extends State<AdminAddStudentScreen> {
           'firstName': firstNameController.text,
           'lastName': lastNameController.text,
           'batch': batchMap[selectedBatch],
+          'course': courseMap[selectedCourse],
+          'fee': int.parse(feeController.text),
+          'discount': int.parse(discountController.text),
         }),
       );
 
@@ -146,6 +182,43 @@ class _AdminAddStudentScreenState extends State<AdminAddStudentScreen> {
                   labelText: 'Batch',
                   border: OutlineInputBorder(),
                 ),
+              ),
+              SizedBox(height: 16.0),
+              DropdownButtonFormField<String>(
+                value: selectedCourse,
+                items: courseMap.keys.map((String key) {
+                  return DropdownMenuItem<String>(
+                    value: key,
+                    child: Text(key),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedCourse = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Course',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: feeController,
+                decoration: InputDecoration(
+                  labelText: 'Fee',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: discountController,
+                decoration: InputDecoration(
+                  labelText: 'Discount',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
               ),
               SizedBox(height: 20.0),
               Center(
