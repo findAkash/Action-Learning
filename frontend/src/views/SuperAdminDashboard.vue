@@ -1,25 +1,28 @@
 <template>
-    <div class="container mx-auto">
-      <h1 class="text-2xl font-bold text-center mb-6 text-primary">SuperAdmin Dashboard</h1>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div
-          v-for="institution in institutions"
-          :key="institution._id"
-          class="card bordered shadow-lg p-4 cursor-pointer"
-          @click="viewInstitution(institution._id)"
-        >
-          <h2 class="text-xl font-bold">{{ institution.name }}</h2>
-          <p>{{ institution.address }}</p>
-          <p>{{ institution.phone }}</p>
-          <p>{{ institution.email }}</p>
-          <p>{{ institution.website }}</p>
-        </div>
-      </div>
-    </div>
+    <v-container>
+      <v-row>
+        <v-col>
+          <h1 class="text-2xl font-bold text-center mb-6">SuperAdmin Dashboard</h1>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col v-for="institution in institutions" :key="institution._id" cols="12" sm="6" md="4">
+          <v-card @click="viewInstitution(institution._id)" class="cursor-pointer">
+            <v-card-title>{{ institution.name }}</v-card-title>
+            <v-card-subtitle>{{ institution.address }}</v-card-subtitle>
+            <v-card-text>
+              <p>{{ institution.phone }}</p>
+              <p>{{ institution.email }}</p>
+              <p>{{ institution.website }}</p>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </template>
   
   <script lang="ts">
-  import { defineComponent, onMounted } from 'vue';
+  import { defineComponent, onMounted, computed } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
   
@@ -33,12 +36,14 @@
         await store.dispatch('fetchInstitutions');
       });
   
+      const institutions = computed(() => store.state.institutions);
+  
       const viewInstitution = (id: string) => {
         router.push(`/institution/${id}`);
       };
   
       return {
-        institutions: store.state.institutions,
+        institutions,
         viewInstitution,
       };
     },
