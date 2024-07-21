@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../AdminAddModuleScreen/adminAddModuleScreen.dart'; // Import the screen for adding a module
+import '../AdminModuleInfoScreen/adminModuleInfoScreen.dart'; // Import the screen for module info
 
 class AdminModuleScreen extends StatefulWidget {
   final String token;
@@ -68,6 +69,15 @@ class _AdminModuleScreenState extends State<AdminModuleScreen> {
     }
   }
 
+  void navigateToModuleInfo(Map<String, dynamic> module) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdminModuleInfoScreen(module: module),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,12 +112,14 @@ class _AdminModuleScreenState extends State<AdminModuleScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Description: ${module['description'] ?? 'No description'}'),
-                    Text('Teacher: ${module['teachers'] != null && module['teachers'].isNotEmpty ? '${module['teachers'][0]['teacher']['user']['firstName']} ${module['teachers'][0]['teacher']['user']['lastName']}' : 'No teacher'}'),
+                    Text(
+                        'Teacher: ${module['teachers'] != null && module['teachers'].isNotEmpty ? '${module['teachers'][0]['teacher']['user']['firstName']} ${module['teachers'][0]['teacher']['user']['lastName']}' : 'No teacher'}'),
                     Text('Credit: ${module['credit']?.toString() ?? 'No credit'}'),
                     Text('Batch: ${module['batch'] != null ? module['batch']['batchName'] : 'No batch'}'),
                     Text('Course: ${module['course'] != null ? module['course']['name'] : 'No course'}'),
                   ],
                 ),
+                onTap: () => navigateToModuleInfo(module),
               ),
             );
           },

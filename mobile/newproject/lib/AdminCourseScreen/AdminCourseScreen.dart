@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 import '../AdminAddCoursceScreen/adminAddCourseScreen.dart';
+import '../AdminCourseInfoScreen/adminCourseInfoScreen.dart'; // Import the screen for course info
 
 class AdminCourseScreen extends StatefulWidget {
   final String token;
@@ -68,6 +70,15 @@ class _AdminCourseScreenState extends State<AdminCourseScreen> {
     }
   }
 
+  void navigateToCourseInfo(Map<String, dynamic> course) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdminCourseInfoScreen(course: course),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,6 +120,7 @@ class _AdminCourseScreenState extends State<AdminCourseScreen> {
                     Text('Department: ${course['department']['name']}'),
                   ],
                 ),
+                onTap: () => navigateToCourseInfo(course),
               ),
             );
           },
