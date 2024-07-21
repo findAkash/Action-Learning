@@ -6,6 +6,7 @@ import {
   handleAsyncRequest,
   APIError,
 } from '../helpers/handle-async-request.js';
+import { Student } from '../models/institution/student.js';
 
 export const authMiddleware = (type) => async (req, res, next) => {
   try {
@@ -46,13 +47,16 @@ export const authMiddleware = (type) => async (req, res, next) => {
       const user = await User.findOne({
         _id: decoded._id,
       });
-      if (!user) {
+      const student = await Student.findOne({ user: user._id });
+      if (!user && !student) {
         throw new APIError(401, 'User not found');
       }
+
       if (user.role !== 'student') {
         throw new APIError(401, 'Unauthorized');
       }
       req.user = user;
+      req.student = student;
     } else if (type === 'teacher') {
       const user = await User.findOne({
         _id: decoded._id,

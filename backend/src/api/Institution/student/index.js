@@ -7,11 +7,12 @@ import { User } from '../../../models/user.js';
 import { Student } from '../../../models/institution/student.js';
 // import { TeacherAPI } from './teacher.js';
 // import { StudentAPI } from './student.js';
-// import { CourseAPI } from './course.js';
+import { CourseAPI } from './course.js';
 // import { BatchAPI } from './batch.js';
 // import { EnrollmentAPI } from './enrollment.js';
 // import { RoutineAPI } from './routine.js';
 import { authMiddleware } from '../../../middleware/authMiddleware.js';
+import { ModuleAPI } from './module.js';
 
 export class InstitutionStudentAPI {
   static instance() {
@@ -19,9 +20,10 @@ export class InstitutionStudentAPI {
     router.post('/login', login);
     router.use(authMiddleware('student'));
     router.get('/', getMyData);
+    router.use('/modules', ModuleAPI.instance());
     // router.use('/teacher', TeacherAPI.instance());
     // router.use('/student', StudentAPI.instance());
-    // router.use('/course', CourseAPI.instance());
+    router.use('/course', CourseAPI.instance());
     // router.use('/batch', BatchAPI.instance());
     // router.use('/enrollment', EnrollmentAPI.instance());
     // router.use('routine', RoutineAPI.instance());
