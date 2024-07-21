@@ -46,7 +46,18 @@ const getEnrollments = handleAsyncRequest(async (req, res) => {
   const institution = req.user.institution;
   const enrollments = await Enrollment.find({
     institution: institution,
-  }).populate('student course');
+  })
+    .populate({
+      path: 'student',
+      select: 'user',
+      populate: {
+        path: 'user',
+        select: 'firstName lastName email',
+      },
+    })
+    .populate({
+      path: 'course',
+    });
   if (!enrollments) {
     throw new APIError(404, 'Enrollments not found');
   }
