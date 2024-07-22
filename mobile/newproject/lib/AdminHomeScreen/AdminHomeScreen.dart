@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../AdminAddClassScreen/adminAddClassScreen.dart';
+import '../AdminAddEnrollmentScreen/adminAddEnrollmentScreen.dart';
+import '../AdminAttendanceScreen/adminAttendanceScreen.dart';
 import '../AdminBatchInfoScreen/adminBatchInfoScreen.dart';
 import '../AdminClassScreen/adminClassScreen.dart';
+import '../AdminCourseScreen/AdminCourseScreen.dart';
 import '../AdminDepartmentScreen/adminDepartmentScreen.dart';
 import '../AdminModuleScreen/adminModuleScreen.dart';
 import '../AdminStudentPage/adminStudentPage.dart';
 import '../AdminTeacherScreen/adminTeacherPage.dart';
-import '../AdminCourseScreen/adminCourseScreen.dart';
-import '../adminEnrollmentScreen/adminEnrollmentScreen.dart';
-
+import '../adminEnrollmentScreen/adminEnrollmentScreen.dart';  // Import the new Attendance screen
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key, required this.token});
@@ -165,7 +167,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     SizedBox(height: 10), // Reduced spacing between rows
                     buildCardRow(context, "Module", Icons.bookmark, "Course", Icons.book), // Updated this row
                     SizedBox(height: 10), // Reduced spacing between rows
-                    buildCardRow(context, "Schedule", Icons.schedule, "Enrollment", Icons.assignment), // Added this row with valid icon
+                    buildCardRow(context, "Class", Icons.class_, "Enrollment", Icons.task), // Added this row
+                    SizedBox(height: 10), // Reduced spacing between rows
+                    buildCardRow(context, "Attendance", Icons.check_box, "", Icons.check_box), // Added Attendance card
                   ],
                 ),
               ),
@@ -242,10 +246,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => AdminModuleScreen(token: widget.token)),
                 );
-              } else if (label1 == "Schedule") {
+              } else if (label1 == "Class") {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AdminClassScreen(token: widget.token)),
+                );
+              } else if (label1 == "Attendance") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminAttendanceScreen(token: widget.token)),
                 );
               }
             },
@@ -253,7 +262,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         ),
         SizedBox(width: 10), // Spacing between buttons
         Expanded(
-          child: buildCardButton(
+          child: label2.isNotEmpty
+              ? buildCardButton(
             context,
             label2,
             icon2,
@@ -283,7 +293,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               }
 
             },
-          ),
+          )
+              : SizedBox(),
         ),
       ],
     );
