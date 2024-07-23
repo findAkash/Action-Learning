@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import '../../InstitutionsScreen/institutionScreen.dart';
 
-
 class DashboardScreen extends StatefulWidget {
   final String token;
 
@@ -24,7 +23,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final TextEditingController websiteController = TextEditingController();
 
   Future<void> createInstitution() async {
-    final String url = 'http://10.0.2.2:8000/api/v1/superadmin/institution/create';
+    final String url =
+        'http://10.0.2.2:8000/api/v1/superadmin/institution/create';
 
     try {
       print('Starting create institution request...');
@@ -121,11 +121,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           TextButton.icon(
             onPressed: () async {
               final institutions = await fetchInstitutions();
-              clearTextFields(); // Clear the text fields when the button is tapped
+              clearTextFields();
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => InstitutionsScreen(institutions: institutions, token: widget.token),
+                  builder: (context) => InstitutionsScreen(
+                      institutions: institutions, token: widget.token),
                 ),
               );
             },

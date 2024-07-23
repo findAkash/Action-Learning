@@ -32,9 +32,11 @@ class _AIScreenState extends State<AIScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Align(
-                    alignment: Alignment.topRight, // To align the chat bubble to the right
+                    alignment: Alignment.topRight,
+                    // To align the chat bubble to the right
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.0, vertical: 10.0),
                       decoration: BoxDecoration(
                         color: Colors.cyan, // Bubble color
                         borderRadius: BorderRadius.circular(20),
@@ -57,7 +59,7 @@ class _AIScreenState extends State<AIScreen> {
                   child: TextField(
                     controller: _textController,
                     decoration: InputDecoration(
-                      labelText: 'Type a message',
+                      labelText: 'Type a messageeeee',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),

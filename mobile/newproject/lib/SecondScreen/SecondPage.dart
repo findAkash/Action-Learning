@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../AIScreen/AIScreen.dart';
 import '../AttendanceScreen/AttendanceScreen.dart';
+import '../Chatbot/student_chatbotScreen.dart';
 import '../CourseScreen/CourseScreen.dart';
 import '../HomeScreen/HomeScreen.dart';
+import '../StudentProfileScreen/StudentProfile_Screen.dart';
+import '../constants.dart';
 
 class SecondRouteStudent extends StatefulWidget {
   final String token;
-
   final String userId;
 
   const SecondRouteStudent({
@@ -31,11 +32,13 @@ class _SecondRouteStudentState extends State<SecondRouteStudent> {
     _widgetOptions = <Widget>[
       HomeScreen(
         token: widget.token,
-        userId: widget.userId,
       ),
-      AIScreen(),
+      ChatScreen(),
       AttendanceScreen(),
       CourseScreen(),
+      StudentProfilePage(
+        token: widget.token,
+      )
     ];
   }
 
@@ -48,19 +51,19 @@ class _SecondRouteStudentState extends State<SecondRouteStudent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'EPITA',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.cyan,
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   // title: const Text(
+      //   //   'EPITA',
+      //   //   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   // ),
+      //   backgroundColor: primaryColor,
+      // ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.cyan,
+        backgroundColor: primaryColor,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -69,7 +72,7 @@ class _SecondRouteStudentState extends State<SecondRouteStudent> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.engineering_outlined),
-            label: 'AI',
+            label: 'Chatbot',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.access_time),
@@ -81,8 +84,8 @@ class _SecondRouteStudentState extends State<SecondRouteStudent> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black54,
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.white,
         onTap: _onItemTapped,
       ),
     );
