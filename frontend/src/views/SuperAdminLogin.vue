@@ -1,28 +1,32 @@
 <template>
-    <div class="flex justify-center items-center min-h-screen bg-base-100">
-      <div class="w-full max-w-xs">
-        <form @submit.prevent="login" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h1 class="text-2xl font-bold text-center mb-6 text-primary">SuperAdmin Login</h1>
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-              Email
-            </label>
-            <input v-model="email" type="email" id="email" placeholder="Email" class="input input-bordered w-full max-w-xs" />
-          </div>
-          <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-              Password
-            </label>
-            <input v-model="password" type="password" id="password" placeholder="Password" class="input input-bordered w-full max-w-xs" />
-          </div>
-          <div class="flex items-center justify-between">
-            <button type="submit" class="btn btn-primary w-full">
-              Login
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <v-container class="fill-height" fluid>
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
+          <v-card>
+            <v-card-title class="text-h5 text-center header-font">SuperAdmin Login</v-card-title>
+            <v-card-text>
+              <v-form @submit.prevent="login">
+                <v-text-field
+                  v-model="email"
+                  label="Email"
+                  type="email"
+                  required
+                  outlined
+                ></v-text-field>
+                <v-text-field
+                  v-model="password"
+                  label="Password"
+                  type="password"
+                  required
+                  outlined
+                ></v-text-field>
+                <v-btn type="submit" color="primary" block>Login</v-btn>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </template>
   
   <script lang="ts">
@@ -41,16 +45,12 @@
   
       const login = async () => {
         try {
-          console.log('Attempting login with', { email: email.value, password: password.value });
           const response = await api.post('/superadmin/auth/login', {
             email: email.value,
             password: password.value,
           });
-          console.log('Response from server', response.data);
           store.commit('setUser', response.data.user);
           store.commit('setToken', response.data.user.tokens.token);
-          console.log(`User ${JSON.stringify(response.data.user)} logged in`);
-          console.log(`Token ${response.data.user.tokens.token} logged in`);
           router.push('/superadmin-dashboard');
         } catch (error) {
           console.error('Login failed', error);
@@ -64,6 +64,8 @@
   </script>
   
   <style scoped>
-  /* Add your styles here */
+  .fill-height {
+    height: 100vh;
+  }
   </style>
   

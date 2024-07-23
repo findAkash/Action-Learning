@@ -4,7 +4,7 @@ import api from '@/utils/api';
 export default createStore({
   state: {
     user: null,
-    token: null,
+    token: localStorage.getItem('token') || null,
     institutions: [],
   },
   mutations: {
@@ -13,6 +13,13 @@ export default createStore({
     },
     setToken(state, token) {
       state.token = token;
+      localStorage.setItem('token', token);
+    },
+    clearUserData(state) {
+      state.user = null;
+      state.token = null;
+      state.institutions = [];
+      localStorage.setItem('token', '');
     },
     setInstitutions(state, institutions) {
       state.institutions = institutions;
