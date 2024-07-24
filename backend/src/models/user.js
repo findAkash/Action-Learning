@@ -86,7 +86,10 @@ UserSchema.methods.generateToken = function () {
   if (this.tokens.token) {
     return this.tokens.token;
   }
-  const token = jwt.sign({ _id: this._id, superadmin: false }, CONFIG.SECRET);
+  const token = jwt.sign(
+    { _id: this._id, superadmin: false, role: this.role },
+    CONFIG.SECRET
+  );
   this.tokens.token = token;
   this.save();
   return token;

@@ -7,6 +7,7 @@ import {
   APIError,
 } from '../helpers/handle-async-request.js';
 import { Student } from '../models/institution/student.js';
+import { Teacher } from '../models/institution/teacher.js';
 
 export const authMiddleware = (type) => async (req, res, next) => {
   try {
@@ -18,7 +19,6 @@ export const authMiddleware = (type) => async (req, res, next) => {
     const cleanToken = token.replace('Bearer ', '');
 
     const decoded = jwt.verify(cleanToken, CONFIG.SECRET);
-    console.log(decoded);
     if (!decoded) {
       throw new APIError(401, 'Invalid token');
     }
@@ -60,15 +60,17 @@ export const authMiddleware = (type) => async (req, res, next) => {
     } else if (type === 'teacher') {
       const user = await User.findOne({
         _id: decoded._id,
-        'tokens.token': token,
       });
       if (!user) {
         throw new APIError(401, 'User not found');
       }
+
       if (user.role !== 'teacher') {
         throw new APIError(401, 'Unauthorized');
       }
+      const teacher = await Teacher.findOne({ user: user._id });
       req.user = user;
+      req.teacher = teacher;
     } else {
       throw new APIError(401, 'Invalid token');
     }
