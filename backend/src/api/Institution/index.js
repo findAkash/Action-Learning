@@ -7,6 +7,7 @@ import { User } from '../../models/user.js';
 import { UserInstitutionAPI } from './user.js';
 import { InstitutionAdminAPI } from './admin/index.js';
 import { InstitutionStudentAPI } from './student/index.js';
+import { InstitutionTeacherAPI } from './teacher/index.js';
 
 export class InstitutionAPI {
   static instance() {
@@ -15,6 +16,7 @@ export class InstitutionAPI {
     router.use('/user', UserInstitutionAPI.instance());
     router.use('/admin', InstitutionAdminAPI.instance());
     router.use('/student', InstitutionStudentAPI.instance());
+    router.use('/teacher', InstitutionTeacherAPI.instance());
     return router;
   }
 }
