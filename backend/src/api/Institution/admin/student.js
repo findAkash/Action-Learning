@@ -6,6 +6,7 @@ import {
 import { Student } from '../../../models/institution/student.js';
 import { User } from '../../../models/user.js';
 import mongoose from 'mongoose';
+import { Enrollment } from '../../../models/institution/enrollment.js';
 
 export class StudentAPI {
   static instance() {
@@ -26,7 +27,16 @@ const createStudent = handleAsyncRequest(async (req, res) => {
   session.startTransaction();
 
   try {
-    const { email, password, firstName, lastName, batch } = req.body;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      batch,
+      course,
+      fee,
+      discount,
+    } = req.body;
 
     // Check if the user already exists
     const isUserExist = await User.findOne({ email });
@@ -55,7 +65,18 @@ const createStudent = handleAsyncRequest(async (req, res) => {
       enrollments: [],
     });
 
+    // Create enrollment
+    const enrollment = new Enrollment({
+      student: student._id,
+      course,
+      fee: fee,
+      discount: discount,
+      institution: institutionId,
+    });
+
     await student.save({ session });
+
+    await enrollment.save({ session });
 
     await session.commitTransaction();
     session.endSession();

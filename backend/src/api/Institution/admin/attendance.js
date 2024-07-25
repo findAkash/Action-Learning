@@ -5,6 +5,7 @@ import {
 } from '../../../helpers/handle-async-request.js';
 import { Attendance } from '../../../models/institution/attendence.js';
 import { ClassSchedule } from '../../../models/institution/scheduleClass.js';
+import moment from 'moment';
 
 export class AttendanceAPI {
   static instance() {
@@ -29,19 +30,68 @@ const getAttendanceRecords = handleAsyncRequest(async (req, res) => {
   }
 
   if (module) {
-    filter.ClassSchedule = { module };
+    // Find all ClassSchedules for the given module
+    const classSchedules = await ClassSchedule.find({ module })
+      .select('_id')
+      .exec();
+    filter.classSchedule = {
+      $in: classSchedules.map((schedule) => schedule._id),
+    };
   }
 
   if (student) {
-    // Find all attendance records for the given student
     filter.attendeeId = student;
+  }
+
+  if (date) {
+    let startDate;
+    let endDate;
+
+    if (moment(date, 'YYYY-MM-DD', true).isValid()) {
+      // Handle specific date
+      startDate = moment(date).startOf('day').toDate();
+      endDate = moment(date).endOf('day').toDate();
+    } else {
+      // Handle predefined ranges
+      switch (date.toLowerCase()) {
+        case 'today':
+          startDate = moment().startOf('day').toDate();
+          endDate = moment().endOf('day').toDate();
+          break;
+        case 'tomorrow':
+          startDate = moment().add(1, 'day').startOf('day').toDate();
+          endDate = moment().add(1, 'day').endOf('day').toDate();
+          break;
+        case 'yesterday':
+          startDate = moment().subtract(1, 'day').startOf('day').toDate();
+          endDate = moment().subtract(1, 'day').endOf('day').toDate();
+          break;
+        case 'thisweek':
+          startDate = moment().startOf('week').toDate();
+          endDate = moment().endOf('week').toDate();
+          break;
+        case 'nextweek':
+          startDate = moment().add(1, 'week').startOf('week').toDate();
+          endDate = moment().add(1, 'week').endOf('week').toDate();
+          break;
+        case 'lastweek':
+          startDate = moment().subtract(1, 'week').startOf('week').toDate();
+          endDate = moment().subtract(1, 'week').endOf('week').toDate();
+          break;
+        default:
+          throw new APIError(400, 'Invalid date format');
+      }
+    }
+
+    filter.date = { $gte: startDate, $lte: endDate };
   }
 
   try {
     const attendanceRecords = await Attendance.find(filter)
       .populate({
         path: 'attendeeId',
-        select: 'firstName lastName email', // Customize fields based on your Student/Staff/Teacher schema
+        populate: { path: 'user', select: 'firstName lastName email' },
+        select: 'user',
       })
       .populate({
         path: 'classSchedule',

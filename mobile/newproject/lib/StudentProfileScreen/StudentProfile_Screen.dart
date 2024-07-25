@@ -15,6 +15,7 @@ class StudentProfilePage extends StatefulWidget {
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
   Map<String, dynamic> _studentData = {};
+  List<dynamic> _courses = [];
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -31,13 +32,10 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
         'Authorization': 'Bearer ${widget.token}',
       });
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         setState(() {
           _studentData = jsonDecode(response.body)['student'];
-          _isLoading = false;
+          _fetchCoursesData();
         });
       } else {
         setState(() {
@@ -53,11 +51,38 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     }
   }
 
+  Future<void> _fetchCoursesData() async {
+    final url =
+        Uri.parse('http://10.0.2.2:8000/api/v1/institution/student/course/');
+    try {
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer ${widget.token}',
+      });
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _courses = jsonDecode(response.body)['courses'];
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = 'Failed to fetch courses data';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Profile',
           style: TextStyle(color: Colors.white),
         ),
@@ -71,17 +96,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
           ),
         ),
         backgroundColor: primaryColor,
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.edit),
-        //     onPressed: () {
-        //
-        //     },
-        //   ),
-        // ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
               ? Center(child: Text('Error: $_errorMessage'))
               : SingleChildScrollView(
@@ -90,55 +107,68 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 50,
                           backgroundImage:
-                              // _studentData['user'] != null &&
-                              //         _studentData['user']['profileImage'] != null
-                              //     ? NetworkImage(
-                              //         _studentData['user']['profileImage'])
-                              //     :
                               AssetImage('images/student-avatar.png'),
                           backgroundColor: Colors.grey,
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Text(
                           _studentData['user'] != null
                               ? '${_studentData['user']['firstName'] ?? ''} ${_studentData['user']['lastName'] ?? ''}'
                               : 'N/A',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           _studentData['user'] != null
                               ? _studentData['user']['email'] ?? 'N/A'
                               : 'N/A',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 18, color: Colors.grey),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 20),
-                        Divider(),
+                        const SizedBox(height: 20),
+                        const Divider(),
                         ListTile(
-                          leading: Icon(Icons.school),
-                          title: Text('Batch'),
+                          leading: const Icon(Icons.school),
+                          title: const Text('Batch'),
                           subtitle: Text(_studentData['batch'] != null
                               ? _studentData['batch']['batchName'] ?? 'N/A'
                               : 'N/A'),
                         ),
-                        SizedBox(height: 20),
+                        ..._courses.map((course) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                leading: const Icon(Icons.account_balance),
+                                title: const Text("Department"),
+                                subtitle: Text(course['department'] != null
+                                    ? course['department']['name'] ?? 'N/A'
+                                    : 'N/A'),
+                              ),
+                              ListTile(
+                                leading: const Icon(Icons.book),
+                                title: const Text("Course"),
+                                subtitle: Text(course['name'] ?? 'N/A'),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            // color: primaryColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Edit Profile',
                             style: TextStyle(fontSize: 18),
                           ),

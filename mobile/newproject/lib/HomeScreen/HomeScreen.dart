@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:newproject/constants.dart';
 
+import '../EnrolledCoursesScreen/ViewAllCoursesScreen.dart';
 import '../StudentProfileScreen/StudentProfile_Screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -49,10 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        // title: const Text(
-        //   'EPITA',
-        //   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        // ),
         backgroundColor: primaryColor,
       ),
       backgroundColor: Colors.white,
@@ -130,13 +127,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               _buildIconWithText(
                                 icon: Icons.school,
                                 label: 'Enrolled Courses',
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Viewallcoursesscreen(
+                                                token: userData['student']
+                                                        ?['user']?['tokens']
+                                                    ['token'])),
+                                  );
+                                },
                               ),
                               _buildIconWithText(
                                 icon: Icons.person,
                                 label: 'Profile',
                                 onTap: () {
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
