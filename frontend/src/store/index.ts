@@ -1,5 +1,12 @@
 import { createStore } from 'vuex';
 import api from '@/utils/api';
+import department from './modules/department';
+import course from './modules/course';
+import batch from './modules/batch';
+import student from './modules/student';
+import teacher from './modules/teacher';
+import module from './modules/module';
+import enrollment from './modules/enrollment';
 
 export default createStore({
   state: {
@@ -40,5 +47,13 @@ export default createStore({
       }
     },
   },
-  modules: {},
+  modules: {
+    department,
+    course,
+    batch,
+    student,
+    teacher,
+    module,
+    enrollment,
+  },
 });

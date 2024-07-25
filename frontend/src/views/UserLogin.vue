@@ -51,7 +51,12 @@
           });
           store.commit('setUser', response.data.user);
           store.commit('setToken', response.data.user.tokens.token);
-          router.push('/admin-dashboard');
+          const role = response.data.user.role;
+          if (role === 'admin') {
+            router.push('/admin-dashboard');
+          } else if (role === 'teacher') {
+            router.push('/teacher-dashboard');
+          }
         } catch (error) {
           console.error('Login failed', error);
           alert('Login failed. Please check your credentials and try again.');
