@@ -186,6 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  print("I am here");
                   loginStudent(context);
                 },
                 child: Text('Sign In'),

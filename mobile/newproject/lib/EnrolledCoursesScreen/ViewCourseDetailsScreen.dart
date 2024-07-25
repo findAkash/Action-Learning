@@ -1,13 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../constants.dart';
 
 class Viewcoursedetailsscreen extends StatefulWidget {
-  final String token;
+  final Map<String, dynamic> module;
 
-  const Viewcoursedetailsscreen({super.key, required this.token});
+  const Viewcoursedetailsscreen({super.key, required this.module});
 
   @override
   State<Viewcoursedetailsscreen> createState() =>
@@ -15,53 +12,12 @@ class Viewcoursedetailsscreen extends StatefulWidget {
 }
 
 class _ViewcoursedetailsscreenState extends State<Viewcoursedetailsscreen> {
-  Map<String, dynamic> _moduledetail = {};
-  bool _isLoading = true;
-  String? _errorMessage;
+  late Map<String, dynamic> _moduledetail;
 
   @override
   void initState() {
     super.initState();
-    _fetchmoduleDetailData();
-  }
-
-  Future<void> _fetchmoduleDetailData() async {
-    final url =
-        Uri.parse('http://10.0.2.2:8000/api/v1/institution/student/modules/');
-    try {
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer ${widget.token}',
-      });
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print('API Response: $data');
-        if (data is Map<String, dynamic> &&
-            data['modules'] is List &&
-            (data['modules'] as List).isNotEmpty) {
-          setState(() {
-            _moduledetail =
-                (data['modules'] as List).first as Map<String, dynamic>;
-            _isLoading = false;
-          });
-        } else {
-          setState(() {
-            _errorMessage = 'No modules found';
-            _isLoading = false;
-          });
-        }
-      } else {
-        setState(() {
-          _errorMessage = 'Failed to fetch module data';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-        _isLoading = false;
-      });
-    }
+    _moduledetail = widget.module;
   }
 
   @override
@@ -83,50 +39,84 @@ class _ViewcoursedetailsscreenState extends State<Viewcoursedetailsscreen> {
           ),
         ),
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-              ? Center(child: Text(_errorMessage!))
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _moduledetail['title'] as String? ?? 'No Title',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Credit: ${(_moduledetail['credit'] as int?)?.toString() ?? 'N/A'}',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Teachers:',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      ...((_moduledetail['teachers'] as List<dynamic>? ?? [])
-                          .map(
-                        (teacher) {
-                          final role = teacher['role'] as String? ?? 'No Role';
-                          final teacherName =
-                              teacher['teacher'] as String? ?? 'No Teacher';
-                          return Text(
-                            '$role: $teacherName',
-                            style: TextStyle(fontSize: 16),
-                          );
-                        },
-                      )),
-                    ],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Hero(
+              tag: _moduledetail['title'] ?? 'No Title',
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  _moduledetail['title'] as String? ?? 'No Title',
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Total Module Credit: ${(_moduledetail['credit'] as int?)?.toString() ?? 'N/A'}',
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Description',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              _moduledetail['description'] as String? ?? 'No Description',
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Teachers',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            ...((_moduledetail['teachers'] as List<dynamic>? ?? [])
+                .map((teacher) {
+              final role = teacher['role'] as String? ?? 'No Role';
+
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                child: ListTile(
+                  title: Text(
+                    role,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  leading: const CircleAvatar(
+                    backgroundColor: primaryColor,
+                    child: Icon(Icons.person, color: Colors.white),
+                  ),
+                ),
+              );
+            }).toList()),
+          ],
+        ),
+      ),
     );
   }
 }
