@@ -13,7 +13,7 @@ export class ScheduledClassAPI {
   static instance() {
     const router = Router();
 
-    router.get(':module_id', getClassForModule);
+    router.get('/:module_id', getClassForModule);
 
     return router;
   }
