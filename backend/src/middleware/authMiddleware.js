@@ -7,6 +7,7 @@ import {
   APIError,
 } from '../helpers/handle-async-request.js';
 import { Student } from '../models/institution/student.js';
+import { Teacher } from '../models/institution/teacher.js';
 
 export const authMiddleware = (type) => async (req, res, next) => {
   try {
@@ -60,15 +61,46 @@ export const authMiddleware = (type) => async (req, res, next) => {
     } else if (type === 'teacher') {
       const user = await User.findOne({
         _id: decoded._id,
-        'tokens.token': token,
       });
+      console.log(user);
       if (!user) {
         throw new APIError(401, 'User not found');
       }
       if (user.role !== 'teacher') {
         throw new APIError(401, 'Unauthorized');
       }
+      if (user.role !== 'admin') {
+        throw new APIError(401, 'Unauthorized');
+      }
       req.user = user;
+    } else if (type === 'student') {
+      const user = await User.findOne({
+        _id: decoded._id,
+      });
+      const student = await Student.findOne({ user: user._id });
+      if (!user && !student) {
+        throw new APIError(401, 'User not found');
+      }
+
+      if (user.role !== 'student') {
+        throw new APIError(401, 'Unauthorized');
+      }
+      req.user = user;
+      req.student = student;
+    } else if (type === 'teacher') {
+      const user = await User.findOne({
+        _id: decoded._id,
+      });
+      if (!user) {
+        throw new APIError(401, 'User not found');
+      }
+
+      if (user.role !== 'teacher') {
+        throw new APIError(401, 'Unauthorized');
+      }
+      const teacher = await Teacher.findOne({ user: user._id });
+      req.user = user;
+      req.teacher = teacher;
     } else {
       throw new APIError(401, 'Invalid token');
     }
