@@ -6,4 +6,6 @@ backend/node_modules
 frontend/node_modules
 node_modules
 attendance-management-system/venv
+.idea
+.vscode
 
