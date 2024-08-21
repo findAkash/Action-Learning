@@ -19,6 +19,7 @@ export const authMiddleware = (type) => async (req, res, next) => {
     const cleanToken = token.replace('Bearer ', '');
 
     const decoded = jwt.verify(cleanToken, CONFIG.SECRET);
+    console.log(decoded);
     if (!decoded) {
       throw new APIError(401, 'Invalid token');
     }
@@ -38,6 +39,35 @@ export const authMiddleware = (type) => async (req, res, next) => {
       console.log(user);
       if (!user) {
         throw new APIError(401, 'User not found');
+      }
+      if (user.role !== 'admin') {
+        throw new APIError(401, 'Unauthorized');
+      }
+      req.user = user;
+    } else if (type === 'student') {
+      const user = await User.findOne({
+        _id: decoded._id,
+      });
+      const student = await Student.findOne({ user: user._id });
+      if (!user && !student) {
+        throw new APIError(401, 'User not found');
+      }
+
+      if (user.role !== 'student') {
+        throw new APIError(401, 'Unauthorized');
+      }
+      req.user = user;
+      req.student = student;
+    } else if (type === 'teacher') {
+      const user = await User.findOne({
+        _id: decoded._id,
+      });
+      console.log(user);
+      if (!user) {
+        throw new APIError(401, 'User not found');
+      }
+      if (user.role !== 'teacher') {
+        throw new APIError(401, 'Unauthorized');
       }
       if (user.role !== 'admin') {
         throw new APIError(401, 'Unauthorized');
